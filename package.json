@@ -45,7 +45,6 @@
     "sass-loader": "6.0.6",
     "style-loader": "0.18.2",
     "uglifyjs-webpack-plugin": "^1.0.0-rc.0",
-    "unirest": "^0.6.0",
     "uuid": "3.4.0",
     "validator": "8.0.0",
     "webpack": "3.1.0",
