@@ -10,9 +10,9 @@ import { startReadUsers } from './actions/users';
 import 'normalize.css/normalize.css';
 import './styles/styles.scss';
 import 'react-dates/lib/css/_datepicker.css';
-import firebase from 'firebase/app';
-import 'firebase/auth';
+import { firebase } from './firebase/firebase';
 import LoadingPage from './components/LoadingPage';
+import { startLogin } from './actions/auth';
 
 const store = configureStore();
 const jsx = (
@@ -25,11 +25,23 @@ let hasRendered = false;
 const renderApp = () => {
   if (!hasRendered) {
     store.dispatch(startReadMovies()).then(() => {
-      store.dispatch(startSetUser(firebase.auth().currentUser.uid)).then(() => {
-        store.dispatch(startReadUsers(firebase.auth().currentUser.uid)).then(() => {
-          ReactDOM.render(jsx, document.getElementById('app'));
+      if(!firebase.auth().currentUser)
+      {
+        store.dispatch(startLogin()).then(() => {
+          store.dispatch(startSetUser(firebase.auth().currentUser.uid)).then(() => {
+            store.dispatch(startReadUsers(firebase.auth().currentUser.uid)).then(() => {
+              ReactDOM.render(jsx, document.getElementById('app'));
+            });
+          });
+        })
+      } else {
+        store.dispatch(startSetUser(firebase.auth().currentUser.uid)).then(() => {
+          store.dispatch(startReadUsers(firebase.auth().currentUser.uid)).then(() => {
+            ReactDOM.render(jsx, document.getElementById('app'));
+          });
         });
-      });
+      }
+      
     });
     hasRendered = true;
   }
