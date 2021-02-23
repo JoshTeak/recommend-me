@@ -3,12 +3,14 @@ import 'firebase/database';
 import 'firebase/auth';
 
 const config = {
-  apiKey: process.env.FIREBASE_API_KEY,
-  authDomain: process.env.FIREBASE_AUTH_DOMAIN,
-  databaseURL: process.env.FIREBASE_DATABASE_URL,
-  projectId: process.env.FIREBASE_PROJECT_ID,
-  storageBucket: process.env.FIREBASE_STORAGE_BUCKET,
-  messagingSenderId: process.env.FIREBASE_MESSAGING_SENDER_ID
+  apiKey: "AIzaSyB99PXO0Rz0oogEJK01u12A2xdTX--4S_E",
+  authDomain: "recommend-me-5df42.firebaseapp.com",
+  databaseURL: "https://recommend-me-5df42-default-rtdb.firebaseio.com",
+  projectId: "recommend-me-5df42",
+  storageBucket: "recommend-me-5df42.appspot.com",
+  messagingSenderId: "640992015187",
+  appId: "1:640992015187:web:79b4c23935898dc6ef27a6",
+  measurementId: "G-KP86MF124R"
 };
 
 firebase.initializeApp(config);
