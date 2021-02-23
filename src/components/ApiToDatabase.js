@@ -1,6 +1,5 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import unirest from 'unirest';
 import movieList from './MovieList';
 import {startSetMovies} from '../actions/moviesList';
 import LoadingPage from './LoadingPage';

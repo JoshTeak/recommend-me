@@ -1,6 +1,5 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import unirest from 'unirest';
 import LoadingPage from './LoadingPage';
 
 export class FindPage extends React.Component {

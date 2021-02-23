@@ -4,7 +4,6 @@ import { createBrowserHistory } from 'history';
 import SeenPage from '../components/SeenPage'; 
 import RecommendPage from '../components/RecommendPage';
 import FindPage from '../components/FindPage'; 
-import AdminPage from '../components/ApiToDatabase';
 import NotFoundPage from '../components/NotFoundPage';
 import LoginPage from '../components/LoginPage';
 import PrivateRoute from './PrivateRoute';
@@ -53,7 +52,6 @@ export const Page = () => {
             <PrivateRoute path="/seen" component={SeenPage} />
             <PrivateRoute path="/recommend" component={RecommendPage} />
             <PrivateRoute path="/find" component={FindPage} />
-            <PrivateRoute path="/admin" component={AdminPage} />
             <Route component={NotFoundPage} />
           </Switch>
         </CSSTransition>
@@ -81,8 +79,6 @@ export const LocationValue = (path) => {
       return 1;
     case '/find':
       return 2;
-    case '/admin':
-      return 3;
     default:
       return 10;
   }
