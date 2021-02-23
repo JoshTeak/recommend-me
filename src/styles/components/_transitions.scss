@@ -1,0 +1,23 @@
+.transition {
+  display: flex;
+  justify-content: center;
+}
+
+.page {
+  width: 100%;
+}
+
+.page-change-enter {
+}
+
+.page-change-enter-active {
+  transition: transform 300ms;
+}
+
+.page-change-exit {
+  position: absolute;
+}
+
+.page-change-exit-active {
+  transition: transform 300ms;
+}

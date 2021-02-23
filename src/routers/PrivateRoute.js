@@ -1,23 +1,19 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { Route, Redirect } from 'react-router-dom';
-import Header from '../components/Header';
 
 export const PrivateRoute = ({
   isAuthenticated,
   component: Component,
-  ...rest
+  ...rest                                                 // ...rest allows us to send the rest of the props through to the components 
 }) => (
-    <Route {...rest} component={(props) => (
-      isAuthenticated ? (
-        <div>
-          <Header />
-          <Component {...props} />
-        </div>
+    <div className="page">
+      {isAuthenticated ? (
+        <Route {...rest} children={(props) => (<Component {...props} />)}/>
       ) : (
           <Redirect to="/" />
-        )
-    )} />
+        )}
+    </div>
   );
 
 const mapStateToProps = (state) => ({
@@ -25,3 +21,4 @@ const mapStateToProps = (state) => ({
 });
 
 export default connect(mapStateToProps)(PrivateRoute);
+

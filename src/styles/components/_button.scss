@@ -1,17 +1,46 @@
 .button {
   background: $blue;
   border: none;
-  color: white;
   display: inline-block;
-  font-size: $font-size-large;
+  font-size: $font-size-xsmall;
   font-weight: 300;
   line-height: 1;
-  padding: $s-size;
+  padding: $xs-size 0;
   text-decoration: none;
 }
 
 .button--link {
   background: none;
+  width: 100%;
+}
+
+.button--logout {
+  background: none;
+  width: 0;
+  position: absolute;
+  right: 4rem;
+}
+
+.button--pair {
+  margin: auto;
+  width: 100%;
+  max-width: 50rem;
+  height: 22%;
+  display: flex;
+}
+
+.button--yes {
+  width: 50%;
+  background-color: #deffde;
+  font-size: $font-size-large;
+  border-style: none;
+}
+
+.button--no {
+  width: 50%;
+  background-color: #ffdbdb;
+  font-size: $font-size-large;
+  border-style: none;
 }
 
 .button--secondary {

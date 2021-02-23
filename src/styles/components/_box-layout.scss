@@ -1,22 +1,31 @@
 .box-layout {
-  align-items: center;
-  background: url('/images/bg.jpg');
-  background-size: cover;
+  margin: auto;
+  max-width: 66rem;
+  height: calc(100vh - 6rem);
   display: flex;
-  height: 100vh;
-  justify-content: center;
-  width: 100vw;
+  flex-direction: column;
+  background-color: aliceblue;
 }
 
-.box-layout__box {
-  background: fade-out(white, .15);
-  border-radius: 3px;
-  padding: $l-size $m-size;
-  text-align: center;
-  width: 25rem;
+.findPage {
+  height: calc(100vh - 10rem);
+  padding: $m-size;
+  margin: 0 $xs-size;
+  background-color: aliceblue;
+}
+
+.box-layout-list {
+  width: max-content;
+  display: flex;
 }
 
 .box-layout__title {
-  margin: 0 0 $m-size 0;
-  line-height: 1;
+  font-size: $font-size-large;
+  margin: 0;
+  padding: $xs-size;
+}
+
+.box-layout__subtitle {
+  font-size: $font-size-large;
+  margin: 0;
 }
