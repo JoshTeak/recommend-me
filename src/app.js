@@ -10,7 +10,8 @@ import { startReadUsers } from './actions/users';
 import 'normalize.css/normalize.css';
 import './styles/styles.scss';
 import 'react-dates/lib/css/_datepicker.css';
-import { firebase } from './firebase/firebase';
+import firebase from 'firebase/app';
+import 'firebase/auth';
 import LoadingPage from './components/LoadingPage';
 
 const store = configureStore();
