@@ -47,8 +47,7 @@ export class SeenPage extends React.Component {
 		let i = 0;
 		do {
 			movieId = Object.keys(this.props.moviesList)[i]
-
-			if(!this.props.user.seenList[movieId])
+			if(!this.props.user.seenList || !this.props.user.seenList[movieId])
 			{
 				this.setState(() => ({
 					movie: {

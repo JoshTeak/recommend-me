@@ -9,6 +9,12 @@
   text-decoration: none;
 }
 
+.button--login {
+  color: white;
+  font-size: $font-size-large;
+  padding: $s-size;
+}
+
 .button--link {
   background: none;
   width: 100%;

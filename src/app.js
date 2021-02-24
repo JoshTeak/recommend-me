@@ -3,7 +3,7 @@ import ReactDOM from 'react-dom';
 import { Provider } from 'react-redux';
 import AppRouter, { history } from './routers/AppRouter';
 import configureStore from './store/configureStore';
-import { login, logout } from './actions/auth';
+import { login, logout, startLogginIn } from './actions/auth';
 import { startSetUser } from './actions/user';
 import { startReadMovies } from './actions/moviesList';
 import { startReadUsers } from './actions/users';
@@ -22,21 +22,18 @@ const jsx = (
 );
 
 let hasRendered = false;
+
 const renderApp = () => {
   if (!hasRendered) {
     store.dispatch(startReadMovies()).then(() => {
+      console.log("attempting to get current user from firebase")
       if(!firebase.auth().currentUser)
       {
-        store.dispatch(startLogin()).then(() => {
-          store.dispatch(startSetUser(firebase.auth().currentUser.uid)).then(() => {
-            store.dispatch(startReadUsers(firebase.auth().currentUser.uid)).then(() => {
-              ReactDOM.render(jsx, document.getElementById('app'));
-            });
-          });
-        })
+        console.log("failed to get current user from firebase")
+        ReactDOM.render(jsx, document.getElementById('app'));
       } else {
-        store.dispatch(startSetUser(firebase.auth().currentUser.uid)).then(() => {
-          store.dispatch(startReadUsers(firebase.auth().currentUser.uid)).then(() => {
+        store.dispatch(startReadUsers()).then(() => {
+          store.dispatch(startSetUser(firebase.auth().currentUser.uid)).then(() => {
             ReactDOM.render(jsx, document.getElementById('app'));
           });
         });
@@ -51,11 +48,18 @@ ReactDOM.render(<LoadingPage />, document.getElementById('app'));
 
 firebase.auth().onAuthStateChanged((user) => {
   if (user) {
+    console.log("login user")
     store.dispatch(login(user.uid));
-    store.dispatch(startSetUser(user.uid));
-    store.dispatch(startReadMovies());
-    store.dispatch(startReadUsers(user.uid));
-    renderApp();
+    store.dispatch(startReadMovies()).then(() => {
+      console.log("finish startReadMovies")
+      store.dispatch(startReadUsers()).then(() => {
+        console.log("finish startReadUsers")
+        store.dispatch(startSetUser(user.uid)).then(() => {
+          console.log("finish startSetUser")
+          renderApp();
+        });
+      });
+    });
     if (history.location.pathname === '/') {
       history.push('/seen');
     }
@@ -65,4 +69,3 @@ firebase.auth().onAuthStateChanged((user) => {
     history.push('/');
   }
 });
-
