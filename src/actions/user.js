@@ -13,7 +13,9 @@ export const startSetUser = (myId, userData = {}) => {
 				return database.ref(`users/${myId}`).once('value').then((snapshot) => {
 					const user = snapshot.val();
 					dispatch(setUser({
-						id: myId,
+						seenList: {},
+						recommendedList: {},
+						myList: {},
 						...user
 					}));	// todo fix if a user updates seen but then logs out and in there is no default recommendedlist = {}
 				})
@@ -26,7 +28,6 @@ export const startSetUser = (myId, userData = {}) => {
 				const user = {seenList, recommendedList, myList};
 				return database.ref(`users/${myId}`).update(user).then(() => {
 					dispatch(setUser({
-						id: myId,
 						...user
 					}));
 				});

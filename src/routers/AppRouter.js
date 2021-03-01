@@ -30,32 +30,34 @@ export const Page = () => {
   let location = useLocation();
 
   return (
-    <div className="content-container">
-      <TransitionGroup class="transition">
-        <CSSTransition
-          key={location.key}
-          classNames="page-change"
-          timeout={500}
-          onEnter={(e) => {
-            let enteringDirection = Direction('ENTER');
-            e.style.transform = `translate(${enteringDirection}%)`
-          }}
-          onEntering={(e) => {
-            e.style.transform = "translate(0%)"
-          }}
-          onExiting={(e) => {
-            let exitingDirection = Direction('EXIT');
-            e.style.transform = `translate(${exitingDirection}%)`
-          }}
-        >
-          <Switch location={location}>
-            <PrivateRoute path="/seen" component={SeenPage} />
-            <PrivateRoute path="/recommend" component={RecommendPage} />
-            <PrivateRoute path="/find" component={FindPage} />
-            <Route component={NotFoundPage} />
-          </Switch>
-        </CSSTransition>
-      </TransitionGroup>
+    <div className="body">
+      <div className="content-container">
+        <TransitionGroup class="transition">
+          <CSSTransition
+            key={location.key}
+            classNames="page-change"
+            timeout={500}
+            onEnter={(e) => {
+              let enteringDirection = Direction('ENTER');
+              e.style.transform = `translate(${enteringDirection}%)`
+            }}
+            onEntering={(e) => {
+              e.style.transform = "translate(0%)"
+            }}
+            onExiting={(e) => {
+              let exitingDirection = Direction('EXIT');
+              e.style.transform = `translate(${exitingDirection}%)`
+            }}
+          >
+            <Switch location={location}>
+              <PrivateRoute path="/seen" component={SeenPage} />
+              <PrivateRoute path="/recommend" component={RecommendPage} />
+              <PrivateRoute path="/find" component={FindPage} />
+              <Route component={NotFoundPage} />
+            </Switch>
+          </CSSTransition>
+        </TransitionGroup>
+      </div>
     </div>
   )
 }

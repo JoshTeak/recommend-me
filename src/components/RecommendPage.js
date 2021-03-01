@@ -1,6 +1,7 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import {startEditUser} from '../actions/user';
+import { startEditUser, startSetUser } from '../actions/user';
+import { startReadMovies } from '../actions/moviesList';
 import LoadingPage from './LoadingPage';
 
 export class RecommendPage extends React.Component {
@@ -16,19 +17,34 @@ export class RecommendPage extends React.Component {
 				rated: null,
 				released: null,
 				rating: null
-			}
+			},
+			initialization: false,
+			insufficientMovies: true
 		};
 	};
 
 	componentDidMount() {
-		this.findNewMovie();
+		this.initializePage();
+	}
+
+	initializePage = () => {
+		if(this.props.user.length === 0 || this.props.moviesList.length === 0)				// only gets the moviesList and user if they dont already exist
+		{
+			this.props.startReadMovies().then(() => {
+		      	this.props.startSetUser(this.props.auth.uid).then(() => {
+					this.findNewMovie();
+		        });
+		    });
+		} else {
+			this.findNewMovie();
+		}
 	}
 
 	recommendClicked = () => {
 		let recommendedList = this.props.user.recommendedList;
 		recommendedList[this.state.movie.id] = {movie: this.state.movie.title, recommended: true};
 
-		this.props.startEditUser(this.props.user.id, {recommendedList: recommendedList});
+		this.props.startEditUser(this.props.auth.uid, {recommendedList: recommendedList});
 
 		this.findNewMovie();
 	}
@@ -37,7 +53,7 @@ export class RecommendPage extends React.Component {
 		let recommendedList = this.props.user.recommendedList;
 		recommendedList[this.state.movie.id] = {movie: this.state.movie.title, recommended: false};
 
-		this.props.startEditUser(this.props.user.id, {recommendedList: recommendedList});
+		this.props.startEditUser(this.props.auth.uid, {recommendedList: recommendedList});
 
 		this.findNewMovie();
 	}
@@ -45,7 +61,8 @@ export class RecommendPage extends React.Component {
 	findNewMovie = () => {
 		let movieId = null;
 		let i = 0;
-		do {
+		for (i = 0; i < Object.keys(this.props.user.seenList).length; i++)
+		{
 			movieId = Object.keys(this.props.user.seenList)[i]
 			if(this.props.user.seenList[movieId].seen)
 			{
@@ -60,35 +77,43 @@ export class RecommendPage extends React.Component {
 							rated: this.props.moviesList[movieId].rated,
 							released: this.props.moviesList[movieId].released,
 							rating: this.props.moviesList[movieId].rating
-						}
+						},
+						initialization: true,
+						insufficientMovies: false
 					})); 
 					return null;
 				} 
 			}
-			i = i + 1
-		} while (i < Object.keys(this.props.user.seenList).length)
+		} 
+
+		// this setState allows the page to render even if there are no movies available from seen
+		this.setState(() => ({
+			initialization: true,
+			insufficientMovies: true
+		})); 
+		// TODO include condition when no movies have been seen
 	}
 
 	render() {
 		return (
-			<div className="body">
+			<div>
 			    {
-			    	Object.keys(this.props.user).length !== 0 ? 
+			    	this.state.initialization ? 
 			    	<div>
 				    	{
-				    		this.state.movie.title !== null ? 
-				    			<div className="box-layout">
-						    		<p className="box-layout__title">{this.state.movie.title}</p>
-						    		<img 
-								      src={this.state.movie.poster}
-								      alt="new"
-								    />
-								    <div className="button--pair">
-									    <button className="button--yes" onClick={this.recommendClicked}>Recommend</button>
-									    <button className="button--no" onClick={this.notRecommendClicked}>Do Not Recommend</button>
-									</div>
-							    </div>
-							: <p>Need more movies</p>
+				    		this.state.insufficientMovies ? 
+				    		<p>Need more movies</p> :
+			    			<div className="box-layout">
+					    		<p className="box-layout__title">{this.state.movie.title}</p>
+					    		<img 
+							      src={this.state.movie.poster}
+							      alt="new"
+							    />
+							    <div className="button--pair">
+								    <button className="button--yes" onClick={this.recommendClicked}>Recommend</button>
+								    <button className="button--no" onClick={this.notRecommendClicked}>Do Not Recommend</button>
+								</div>
+						    </div>
 						}
 			    	</div>
 			    	: <LoadingPage />
@@ -99,11 +124,14 @@ export class RecommendPage extends React.Component {
 }
 
 const mapDispatchToProps = (dispatch) => ({
-	startEditUser: (id, user) => dispatch(startEditUser(id, user))
+	startEditUser: (id, user) => dispatch(startEditUser(id, user)),
+	startSetUser: (id) => dispatch(startSetUser(id)),
+	startReadMovies: () => dispatch(startReadMovies())
 });
 
 const mapStateToProps = (state) => ({
 	user: state.user,
+	auth: state.auth,
 	moviesList: state.movies
 })
 

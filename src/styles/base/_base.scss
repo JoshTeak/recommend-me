@@ -18,9 +18,12 @@ button:disabled {
   font-weight: bold;
 }
 
+.body {
+	padding-top: 6rem;
+}
+
 img {
     margin: auto;
 	height: 78%;
-	max-width: 100%;
 	padding: $xs-size 0;
 }

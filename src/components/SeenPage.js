@@ -1,6 +1,7 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import {startEditUser} from '../actions/user';
+import { startEditUser, startSetUser } from '../actions/user';
+import { startReadMovies } from '../actions/moviesList';
 import LoadingPage from './LoadingPage';
 
 export class SeenPage extends React.Component {
@@ -16,19 +17,34 @@ export class SeenPage extends React.Component {
 				rated: null,
 				released: null,
 				rating: null
-			}
+			},
+			initialization: false,
+			insufficientMovies: true
 		};
 	};
 
 	componentDidMount() {
-		this.findNewMovie();
+		this.initializePage();
+	}
+
+	initializePage = () => {
+		if(!this.props.auth.uid || this.props.moviesList.length === 0)				// only gets the moviesList and user if they dont already exist
+		{
+			this.props.startReadMovies().then(() => {
+		      	this.props.startSetUser(this.props.auth.uid).then(() => {
+					this.findNewMovie();
+		        });
+		    });
+		} else {
+			this.findNewMovie();
+		}
 	}
 
 	seenClicked = () => {
 		let seenList = this.props.user.seenList;
 		seenList[this.state.movie.id] = {movie: this.state.movie.title, seen: true};
 
-		this.props.startEditUser(this.props.user.id, {seenList: seenList});
+		this.props.startEditUser(this.props.auth.uid, {seenList: seenList});
 
 		this.findNewMovie();
 	}
@@ -36,16 +52,16 @@ export class SeenPage extends React.Component {
 	notSeenClicked = () => {
 		let seenList = this.props.user.seenList;
 		seenList[this.state.movie.id] = {movie: this.state.movie.title, seen: false};
-
-		this.props.startEditUser(this.props.user.id, {seenList: seenList});
+		this.props.startEditUser(this.props.auth.uid, {seenList: seenList});
 
 		this.findNewMovie();
 	}
 
 	findNewMovie = () => {
 		let movieId = null;
-		let i = 0;
-		do {
+		let i;
+		for (i = 0; i < Object.keys(this.props.moviesList).length; i++)
+		{
 			movieId = Object.keys(this.props.moviesList)[i]
 			if(!this.props.user.seenList || !this.props.user.seenList[movieId])
 			{
@@ -58,34 +74,40 @@ export class SeenPage extends React.Component {
 						rated: this.props.moviesList[movieId].rated,
 						released: this.props.moviesList[movieId].released,
 						rating: this.props.moviesList[movieId].rating
-					}
+					},
+					initialization: true,
+					insufficientMovies: false
 				})); 
 				return null;
 			}
-			i = i + 1
-		} while (i < Object.keys(this.props.moviesList).length)
+		} 
+		this.setState(() => ({
+			initialization: true,
+			insufficientMovies: true
+		})); 
+		// TODO include condition when movie list is finished
 	}
 
 	render() {
 		return (
-			<div className="body">
+			<div>
 			    {
-			    	Object.keys(this.props.user).length !== 0 ? 
+			    	this.state.initialization ? 
 			    	<div>
 				    	{
-				    		this.state.movie.title !== null ? 
-				    			<div className="box-layout">
-						    		<p className="box-layout__title">{this.state.movie.title}</p>
-						    		<img 
-								      src={this.state.movie.poster}
-								      alt="new"
-								    />
-								    <div className="button--pair">
-									    <button className="button--yes" onClick={this.seenClicked}>Seen</button>
-									    <button className="button--no" onClick={this.notSeenClicked}>Haven't seen</button>
-								    </div>
+				    		this.state.insufficientMovies ? 
+				    		<p>Need more movies</p> :
+			    			<div className="box-layout">
+					    		<p className="box-layout__title">{this.state.movie.title}</p>
+					    		<img 
+							      src={this.state.movie.poster}
+							      alt="new"
+							    />
+							    <div className="button--pair">
+								    <button className="button--yes" onClick={this.seenClicked}>Seen</button>
+								    <button className="button--no" onClick={this.notSeenClicked}>Haven't seen</button>
 							    </div>
-							: <p>Need more movies</p>
+						    </div>
 						}
 			    	</div>
 			    	: <LoadingPage />
@@ -96,11 +118,14 @@ export class SeenPage extends React.Component {
 }
 
 const mapDispatchToProps = (dispatch) => ({
-	startEditUser: (id, user) => dispatch(startEditUser(id, user))
+	startEditUser: (id, user) => dispatch(startEditUser(id, user)),
+	startSetUser: (id) => dispatch(startSetUser(id)),
+	startReadMovies: () => dispatch(startReadMovies())
 });
 
 const mapStateToProps = (state) => ({
 	user: state.user,
+	auth: state.auth,
 	moviesList: state.movies
 })
 

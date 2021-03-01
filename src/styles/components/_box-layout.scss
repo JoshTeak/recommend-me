@@ -15,8 +15,10 @@
 }
 
 .box-layout-list {
-  width: max-content;
+  overflow: auto;
+  height: calc(100vh - 6rem);
   display: flex;
+  background-color: aliceblue;
 }
 
 .box-layout__title {
