@@ -6,24 +6,12 @@ html {
   font-size: 62.5%;
 }
 
-button {
-  cursor: pointer;
-}
-
-button:disabled {
-  cursor: default;
-}
 
 .is-active {
   font-weight: bold;
 }
 
-.body {
-	padding-top: 6rem;
-}
-
-img {
-    margin: auto;
-	height: 78%;
-	padding: $xs-size 0;
+.selectable:hover{
+  filter: contrast(0.8);
+  cursor: pointer;
 }

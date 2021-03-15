@@ -1,4 +1,14 @@
+button:disabled {
+  cursor: default;
+}
+
+.button:hover{
+  filter: contrast(0.8);
+  cursor: pointer;
+}
+
 .button {
+  cursor: pointer;
   background: $blue;
   border: none;
   display: inline-block;
@@ -16,8 +26,20 @@
 }
 
 .button--link {
+  color: white;
+  margin-top: 2px;
   background: none;
   width: 100%;
+  font-size: $font-size-small;
+}
+
+.button--link:focus {
+  outline: none;
+  filter: contrast(0.8);
+  background-color: $primary-color;
+  font-size: $font-size-large;
+  font-weight: bold;
+  margin-top: 0;
 }
 
 .button--logout {
@@ -31,20 +53,26 @@
   margin: auto;
   width: 100%;
   max-width: 50rem;
-  height: 22%;
+  min-height: 5rem;
   display: flex;
 }
 
 .button--yes {
+  color: white;
+  border-radius: 0.4rem;
+  margin: $xs-size $xs-size $xs-size 0;
   width: 50%;
-  background-color: #deffde;
+  background-color: #36e640;
   font-size: $font-size-large;
   border-style: none;
 }
 
 .button--no {
+  color: white;
+  border-radius: 0.4rem;
+  margin: $xs-size 0;
   width: 50%;
-  background-color: #ffdbdb;
+  background-color: #e63636;
   font-size: $font-size-large;
   border-style: none;
 }
@@ -52,3 +80,36 @@
 .button--secondary {
   background: #888;
 }
+
+.button-group {
+  margin: $xs-size;
+  position: absolute;
+  display: flex;
+  align-items: center;
+}
+
+.button--options {
+  background-color: #0000001a;
+  z-index: 2;
+  border-radius: 100%;
+  width: $l-size;
+  height: $l-size;
+  color: gray;
+  padding: 0;
+}
+
+.button--options:focus {
+  outline: none;
+}
+
+.button-option-icon { 
+  position: relative;
+  top: -10px;
+  left: 1px;
+}
+
+.button-option-dot {
+  line-height: 0.2;
+  font-size: $l-size;
+}
+

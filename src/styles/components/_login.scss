@@ -1,22 +1,57 @@
-.login-layout {
-  align-items: center;
-  background: url('/images/bg.jpg');
-  background-size: cover;
-  display: flex;
+.Login-layout {
+  background-color: white;
+  width: 100vw; 
   height: 100vh;
-  justify-content: center;
-  width: 100vw;
+  display: flex;
+  flex-direction: column;
+  background-color: #ea686a;
+  @media (max-width: $desktop-breakpoint) {
+    flex-direction: row;
+  }
 }
 
-.login-layout__box {
-  background: fade-out(white, .15);
-  border-radius: 3px;
-  padding: $l-size $m-size;
-  text-align: center;
-  width: 25rem;
+.Login-layout-box {
+  background-color: #00000012;
+  position: absolute;
+  z-index: 1;
+  padding: $m-l-size;
+  margin: $s-size;
+  border-radius: 0.4rem;
 }
 
-.login-layout__title {
-  margin: 0 0 $m-size 0;
-  line-height: 1;
+.Login-layout-box p {
+  color: #ffffffa8;
+  width: 25vw;
+  margin-bottom: $m-size;
+  min-width: 27rem;
+  border-radius: $s-corner;
+  font-size: $font-size-large;
+}
+
+.login-layout-title {
+  color: white;
+}
+
+.Login-layout-box button {
+  font-size: $font-size-xlarge;
+  font-weight: bold;
+  padding: $m-l-size;
+  background-color: #c7323285;
+  color: #ffffff9e;
+  border-radius: $m-corner;
+}
+
+.Login-layout-image-box {
+  display: flex;
+  margin-top: auto;
+}
+
+.Login-layout-image-box img{
+  width: inherit;
+  height: 100vh;
+  margin: auto;
+  @media (max-width: $desktop-breakpoint) {
+    width: 100vw;
+    height: inherit;
+  }
 }

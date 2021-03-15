@@ -3,12 +3,15 @@ import { connect } from 'react-redux';
 import { startLogin } from '../actions/auth';
 
 export const LoginPage = ({ startLogin }) => (
-  <div className="login-layout">
-    <div className="login-layout__box">
-      <h1 className="login-layout__title">Recommend Me</h1>
-      <p>Find a movie</p>
-      <button className="button button--login" onClick={startLogin}>Login with Google</button>
+  <div className="Login-layout">
+    <div className="Login-layout-box">
+      <h1 className="login-layout-title">Movie Picker</h1>
+      <p>Movie Picker is a web applications that gives users movie recommendations based on their own individual tastes in movies.</p>
+      <button className="button" onClick={startLogin}>Login with Google</button>
     </div>
+  	<div className="Login-layout-image-box">
+		<img src="/images/popcorn movies.jpg" alt="popcorn movies" />
+	</div>
   </div>
 );
 

@@ -1,33 +1,52 @@
 .box-layout {
+  width: min-content;
   margin: auto;
   max-width: 66rem;
-  height: calc(100vh - 6rem);
   display: flex;
   flex-direction: column;
-  background-color: aliceblue;
+  border: solid 1px #dedede;
+  border-radius: $m-corner;
 }
 
-.findPage {
-  height: calc(100vh - 10rem);
-  padding: $m-size;
+.box-layout-separators {
   margin: 0 $xs-size;
-  background-color: aliceblue;
 }
 
 .box-layout-list {
   overflow: auto;
-  height: calc(100vh - 6rem);
   display: flex;
-  background-color: aliceblue;
 }
 
 .box-layout__title {
   font-size: $font-size-large;
   margin: 0;
-  padding: $xs-size;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  max-width: 79vw;
 }
 
 .box-layout__subtitle {
   font-size: $font-size-large;
   margin: 0;
+}
+
+.box-loyout__bottom-info {    
+  border-radius: 0 0 1.2rem 1.2rem;
+  background-color: $secondary-color;
+  padding: $xs-size $xs-size 0 $xs-size;
+}
+
+.box-layout__poster img{
+  display: block;
+  border-radius: 1.2rem 1.2rem 0 0;
+  height: calc(100vh - 7rem - 0.8rem - 78px - 2px);
+}
+
+.recc-page img {
+  height: calc(100vh - 7rem - 0.8rem - 86px - 2px);
+}
+
+.find-page img {
+  height: calc(100vh - 7rem - 0.8rem - 108px - 2px);
 }

@@ -1,24 +1,25 @@
 .header {
-  height: 6rem;
-  position: fixed;
+  height: 7rem;
   width: 100%;
+  background-color: $primary-color;
+  margin-bottom: $xs-size;
 }
 
 .header__content {
-  align-items: center;
-  display: flex;
 }
 
 .header__title {
-  margin: $xs-size;
   display: flex;
   justify-content: center;
   text-decoration: none;
   font-size: $font-size-small;
   width: 100%;
+  color: white;
 }
 
 .header__links {
+  max-width: 66rem;
+  margin: auto;
   display: flex;
   flex-direction: row;
   justify-content: space-around;

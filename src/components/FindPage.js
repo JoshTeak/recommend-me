@@ -138,15 +138,22 @@ export class FindPage extends React.Component {
 			    	<div className="box-layout-list">
 			    	{
 			    		Object.keys(this.state.recommendedMovieList).map((movie) => (
-				    			<div className="box-layout findPage">
-						    		<p className="box-layout__subtitle">{this.state.recommendedMovieList[movie].title}</p>
-						    		<p className="box-layout__subtitle">{this.state.recommendedMovieList[movie].score}</p>
-						    		<img 
-								      src={this.state.recommendedMovieList[movie].poster}
-								      alt="new"
-								    />
-								    <p className="box-layout__subtitle">{this.state.recommendedMovieList[movie].released}</p>
-								    <p className="box-layout__subtitle">{this.state.recommendedMovieList[movie].genre}</p>
+				    			<div className="box-layout-separators">
+								    <div className="box-layout">
+							    		<div className="box-layout__poster find-page">
+								    		<img 
+										      src={this.state.recommendedMovieList[movie].poster}
+										      alt="new"
+										    />
+									    </div>
+									    <div className="box-loyout__bottom-info">
+							    			<p className="box-layout__subtitle">{this.state.recommendedMovieList[movie].title}</p>
+							    			<p className="box-layout__subtitle">Recommendation score: {this.state.recommendedMovieList[movie].score}</p>
+							    			<p className="box-layout__subtitle">IMDb rating: {this.state.recommendedMovieList[movie].rating}</p>
+										    <p className="box-layout__subtitle">Released: {this.state.recommendedMovieList[movie].released}</p>
+										    <p className="box-layout__subtitle">Genre: {this.state.recommendedMovieList[movie].genre}</p>
+										</div>
+								    </div>
 							    </div>
 							)
 			    		)

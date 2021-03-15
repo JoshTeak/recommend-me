@@ -104,14 +104,18 @@ export class RecommendPage extends React.Component {
 				    		this.state.insufficientMovies ? 
 				    		<p>Need more movies</p> :
 			    			<div className="box-layout">
-					    		<p className="box-layout__title">{this.state.movie.title}</p>
-					    		<img 
-							      src={this.state.movie.poster}
-							      alt="new"
-							    />
-							    <div className="button--pair">
-								    <button className="button--yes" onClick={this.recommendClicked}>Recommend</button>
-								    <button className="button--no" onClick={this.notRecommendClicked}>Do Not Recommend</button>
+					    		<div className="box-layout__poster recc-page">
+						    		<img 
+								      src={this.state.movie.poster}
+								      alt="new"
+								    />
+							    </div>
+							    <div className="box-loyout__bottom-info">
+					    			<p className="box-layout__title">{this.state.movie.title}</p>
+								    <div className="button--pair">
+									    <button className="button--yes" onClick={this.recommendClicked}>Recommend</button>
+									    <button className="button--no" onClick={this.notRecommendClicked}>Do Not Recommend</button>
+									</div>
 								</div>
 						    </div>
 						}

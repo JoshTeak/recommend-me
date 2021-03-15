@@ -4,53 +4,98 @@ import { connect } from 'react-redux';
 import { startLogout } from '../actions/auth';
 import { history } from '../routers/AppRouter'; //todo consider importing from a different file.
 
-export const Header = ({ startLogout }) => (
-  <header className="header">
-    <div className="content-container">
-      <div className="header__content">
-        <h1 className="header__title selectable" onClick={() => {
-          if(history.location.pathname !== "/seen")
-          {
-            history.push({
-              pathname: "/seen",
-              state: { previousPath: history.location}
-            });
-          }
-        }}>Recommend Me</h1>
-        <button className="button button--logout" onClick={startLogout}>Logout</button>
-      </div>
-      <div className="header__links">
-        <button className="button button--link" onClick={() => {
-          if(history.location.pathname !== "/seen")
-          {
-            history.push({
-              pathname: "/seen",
-              state: { previousPath: history.location}
-            });
-          }
-        }}>Seen</button>
-        <button className="button button--link" onClick={() => {
-          if(history.location.pathname !== "/recommend")
-          {
-            history.push({
-              pathname: "/recommend",
-              state: { previousPath: history.location}
-            });
-          }
-        }}>Recommend</button>
-        <button className="button button--link" onClick={() => {
-          if(history.location.pathname !== "/find")
-          {
-            history.push({
-              pathname: "/find",
-              state: { previousPath: history.location}
-            });
-          }
-        }}>Find</button>
-      </div>
-    </div>
-  </header>
-);
+import { firebase, googleAuthProvider } from '../firebase/firebase';
+
+class Header extends React.Component {
+  constructor(props) {
+    super(props);
+
+    this.displayMenuPopup = "none";
+  };
+  optionsMenu = () => {    
+      if(this.displayMenuPopup === "none")
+      {
+        this.displayMenuPopup = "block";
+      } else if(this.displayMenuPopup === "block")
+      {
+        this.displayMenuPopup = "none";
+      }
+      this.forceUpdate();
+  }
+  render() {
+    return (
+      <header className="header">
+        <div className="content-container">
+          <div className="header__content">
+            <div className="list-item--row-end">
+              <div className="button-group">
+                <button className="button button--options" onClick={this.optionsMenu}>
+                  <div className="button-option-icon">
+                    <div className="button-option-dot">.</div>
+                    <div className="button-option-dot">.</div>
+                    <div className="button-option-dot">.</div>
+                  </div>
+                </button>
+              </div>
+              {
+                this.displayMenuPopup === "none" ? "" : (
+                  <div className="dropdown-list">
+                    <div className="dropdown-list-body">
+                      <div className="dropdown-list-item selectable"  onClick={this.props.startLogout}>
+                        <div className="icon-container">
+                          <img className="icon" src="/images/Menu-Expand@4x.png" alt="Menu-Expand@4x" />
+                        </div>
+                        <h3 className="dropdown-list-item__option">Logout</h3>
+                      </div>
+                    </div>
+                  </div>
+                )
+              }
+            </div>
+            <h1 className="header__title selectable" onClick={() => {
+              if(history.location.pathname !== "/seen")
+              {
+                history.push({
+                  pathname: "/seen",
+                  state: { previousPath: history.location}
+                });
+              }
+            }}>Movie Picker</h1>
+          </div>
+          <div className="header__links">
+            <button className="button button--link" onClick={() => {
+              if(history.location.pathname !== "/seen")
+              {
+                history.push({
+                  pathname: "/seen",
+                  state: { previousPath: history.location}
+                });
+              }
+            }}>Seen</button>
+            <button className="button button--link" onClick={() => {
+              if(history.location.pathname !== "/recommend")
+              {
+                history.push({
+                  pathname: "/recommend",
+                  state: { previousPath: history.location}
+                });
+              }
+            }}>Recommend</button>
+            <button className="button button--link" onClick={() => {
+              if(history.location.pathname !== "/find")
+              {
+                history.push({
+                  pathname: "/find",
+                  state: { previousPath: history.location}
+                });
+              }
+            }}>Find</button>
+          </div>
+        </div>
+      </header>
+    );
+  };
+};
 
 const mapDispatchToProps = (dispatch) => ({
   startLogout: () => dispatch(startLogout())
