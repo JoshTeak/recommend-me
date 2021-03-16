@@ -65,10 +65,16 @@ export class FindPage extends React.Component {
 			i = i + 1
 		} while (i < Object.keys(this.props.user.recommendedList).length || currentSample.length > 6)
 
-
+		let mainSample;
+		let randomNumber
 		// select one random like user
-		let mainSample = storedSample[Math.floor(Math.random() * Math.floor(storedSample.length))];
-		
+		for (i = 0; i < storedSample.length; i++)
+		{
+			randomNumber = Math.floor(Math.random() * Math.floor(storedSample.length));
+			mainSample = storedSample[randomNumber];
+			if(!!this.props.users[mainSample].recommendedList) {break; }
+		}
+		console.log(randomNumber)
 		// compares sample user's recommendations to all other users 
 		let recommendListSamples = new Array();
 		i = 0;
