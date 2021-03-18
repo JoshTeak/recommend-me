@@ -36,6 +36,22 @@ export const startSetUser = (myId, userData = {}) => {
 	};
 };
 
+export const resetUser = (myId, userData = {}) => {
+	return (dispatch) => {
+		const {
+			seenList = {},
+			recommendedList = {},
+			myList = {}
+		} = userData;	
+		const user = {seenList, recommendedList, myList};
+		return database.ref(`users/${myId}`).update(user).then(() => {
+			dispatch(setUser({
+				...user
+			}));
+		});
+	};
+};
+
 export const editUser = (updates) => ({
 	type: 'EDIT_USER',
 	updates

@@ -2,6 +2,7 @@ import React from 'react';
 import { NavLink, Link } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { startLogout } from '../actions/auth';
+import { resetUser } from '../actions/user';
 import { history } from '../routers/AppRouter'; //todo consider importing from a different file.
 
 import { firebase, googleAuthProvider } from '../firebase/firebase';
@@ -21,6 +22,15 @@ class Header extends React.Component {
         this.displayMenuPopup = "none";
       }
       this.forceUpdate();
+  }
+  resetAlgorithm = () => {
+    this.props.resetUser(this.props.auth.uid).then(() => {
+      this.optionsMenu();
+      history.push({
+        pathname: "/seen",
+        state: { previousPath: history.location}
+      });
+    });
   }
   render() {
     return (
@@ -46,6 +56,12 @@ class Header extends React.Component {
                           <img className="icon" src="/images/Menu-Expand@4x.png" alt="Menu-Expand@4x" />
                         </div>
                         <h3 className="dropdown-list-item__option">Logout</h3>
+                      </div>
+                      <div className="dropdown-list-item selectable" onClick={this.resetAlgorithm}>
+                        <div className="icon-container">
+                          <img className="icon" src="/images/Favourite@4x.png" alt="Favourite@4x" />
+                        </div>
+                        <h3 className="dropdown-list-item__option">Reset</h3>
                       </div>
                     </div>
                   </div>
@@ -98,7 +114,12 @@ class Header extends React.Component {
 };
 
 const mapDispatchToProps = (dispatch) => ({
-  startLogout: () => dispatch(startLogout())
+  startLogout: () => dispatch(startLogout()),
+  resetUser: (id) => dispatch(resetUser(id))
 });
 
-export default connect(undefined, mapDispatchToProps)(Header);
+const mapStateToProps = (state) => ({
+  auth: state.auth
+})
+
+export default connect(mapStateToProps, mapDispatchToProps)(Header);

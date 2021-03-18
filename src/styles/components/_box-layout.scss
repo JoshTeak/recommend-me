@@ -1,11 +1,4 @@
 .box-layout {
-  width: min-content;
-  margin: auto;
-  max-width: 66rem;
-  display: flex;
-  flex-direction: column;
-  border: solid 1px #dedede;
-  border-radius: $m-corner;
 }
 
 .box-layout-separators {
@@ -23,23 +16,38 @@
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
-  max-width: 79vw;
+  max-width: 29rem;
 }
 
 .box-layout__subtitle {
   font-size: $font-size-large;
   margin: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  max-width: 34rem;
 }
 
 .box-loyout__bottom-info {    
   border-radius: 0 0 1.2rem 1.2rem;
   background-color: $secondary-color;
   padding: $xs-size $xs-size 0 $xs-size;
+  max-width: inherit;
+}
+
+.box-movie-card-layout {
+  width: min-content;
+  margin: auto;
+  display: flex;
+  flex-direction: column;
+  border: solid 1px #dedede;
+  border-radius: $m-corner;
 }
 
 .box-layout__poster img{
   display: block;
   border-radius: 1.2rem 1.2rem 0 0;
+  max-width: calc(100vw - 2px);
   height: calc(100vh - 7rem - 0.8rem - 78px - 2px);
 }
 
@@ -49,4 +57,10 @@
 
 .find-page img {
   height: calc(100vh - 7rem - 0.8rem - 108px - 2px);
+}
+
+.page-layout {
+  background-color: #ffffff00;
+  display: flex;
+  justify-content: center;
 }

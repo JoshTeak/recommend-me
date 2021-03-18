@@ -74,7 +74,6 @@ export class FindPage extends React.Component {
 			mainSample = storedSample[randomNumber];
 			if(!!this.props.users[mainSample].recommendedList) {break; }
 		}
-		console.log(randomNumber)
 		// compares sample user's recommendations to all other users 
 		let recommendListSamples = new Array();
 		i = 0;
@@ -145,7 +144,7 @@ export class FindPage extends React.Component {
 			    	{
 			    		Object.keys(this.state.recommendedMovieList).map((movie) => (
 				    			<div className="box-layout-separators">
-								    <div className="box-layout">
+								    <div className="box-movie-card-layout">
 							    		<div className="box-layout__poster find-page">
 								    		<img 
 										      src={this.state.recommendedMovieList[movie].poster}

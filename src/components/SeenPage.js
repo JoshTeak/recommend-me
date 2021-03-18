@@ -3,23 +3,15 @@ import { connect } from 'react-redux';
 import { startEditUser, startSetUser } from '../actions/user';
 import { startReadMovies } from '../actions/moviesList';
 import LoadingPage from './LoadingPage';
+import Swipe from "./Swipe";
 
 export class SeenPage extends React.Component {
 	constructor(props) {
 		super(props)
 
 		this.state = {
-			movie: {
-				title: null,
-				id: null, 
-				genre: null,
-				poster: null,
-				rated: null,
-				released: null,
-				rating: null
-			},
 			initialization: false,
-			insufficientMovies: true
+			insufficientMovies: false
 		};
 	};
 
@@ -32,32 +24,31 @@ export class SeenPage extends React.Component {
 		{
 			this.props.startReadMovies().then(() => {
 		      	this.props.startSetUser(this.props.auth.uid).then(() => {
-					this.findNewMovie();
+					this.setState(() => ({
+						initialization: true
+					})); 
 		        });
 		    });
 		} else {
-			this.findNewMovie();
+			this.setState(() => ({
+				initialization: true
+			})); 
 		}
 	}
 
-	seenClicked = () => {
+	seenClicked = (movieInfo) => {
 		let seenList = this.props.user.seenList;
-		seenList[this.state.movie.id] = {movie: this.state.movie.title, seen: true};
-
+		seenList[movieInfo.id] = {movie: movieInfo.title, seen: true};
 		this.props.startEditUser(this.props.auth.uid, {seenList: seenList});
-
-		this.findNewMovie();
 	}
 
-	notSeenClicked = () => {
+	notSeenClicked = (movieInfo) => {
 		let seenList = this.props.user.seenList;
-		seenList[this.state.movie.id] = {movie: this.state.movie.title, seen: false};
+		seenList[movieInfo.id] = {movie: movieInfo.title, seen: false};
 		this.props.startEditUser(this.props.auth.uid, {seenList: seenList});
-
-		this.findNewMovie();
 	}
 
-	findNewMovie = () => {
+	findNewMovie = (oldMovie) => {
 		let movieId = null;
 		let i;
 		for (i = 0; i < Object.keys(this.props.moviesList).length; i++)
@@ -65,20 +56,22 @@ export class SeenPage extends React.Component {
 			movieId = Object.keys(this.props.moviesList)[i]
 			if(!this.props.user.seenList || !this.props.user.seenList[movieId])
 			{
-				this.setState(() => ({
-					movie: {
-						title: this.props.moviesList[movieId].title,
-						id: [movieId],
-						genre: this.props.moviesList[movieId].genre,
-						poster: this.props.moviesList[movieId].poster,
-						rated: this.props.moviesList[movieId].rated,
-						released: this.props.moviesList[movieId].released,
-						rating: this.props.moviesList[movieId].rating
-					},
-					initialization: true,
-					insufficientMovies: false
-				})); 
-				return null;
+				if(!oldMovie || oldMovie.id[0] !== [movieId][0])
+				{
+					this.setState(() => ({
+						initialization: true,
+						insufficientMovies: false
+					})); 
+					return {
+							title: this.props.moviesList[movieId].title,
+							id: [movieId],
+							genre: this.props.moviesList[movieId].genre,
+							poster: this.props.moviesList[movieId].poster,
+							rated: this.props.moviesList[movieId].rated,
+							released: this.props.moviesList[movieId].released,
+							rating: this.props.moviesList[movieId].rating
+					};
+				}
 			}
 		} 
 		this.setState(() => ({
@@ -97,21 +90,12 @@ export class SeenPage extends React.Component {
 				    	{
 				    		this.state.insufficientMovies ? 
 				    		<p>Need more movies</p> :
-			    			<div className="box-layout">
-					    		<div className="box-layout__poster seen-page">
-						    		<img 
-								      src={this.state.movie.poster}
-								      alt="new"
-								    />
-							    </div>
-							    <div className="box-loyout__bottom-info">
-					    			<p className="box-layout__title">{this.state.movie.title}</p>
-								    <div className="button--pair">
-									    <button className="button--yes" onClick={this.seenClicked}>Seen</button>
-									    <button className="button--no" onClick={this.notSeenClicked}>Haven't seen</button>
-								    </div>
-							    </div>
-						    </div>
+				    		<Swipe 
+				    			pageType={"SEEN"}
+				    			findNewMovie={this.findNewMovie}
+				    			positiveClicked={this.seenClicked}
+				    			negativeClicked={this.notSeenClicked}
+				    		/>
 						}
 			    	</div>
 			    	: <LoadingPage />

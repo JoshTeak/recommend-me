@@ -63,7 +63,7 @@ button:disabled {
   margin: $xs-size $xs-size $xs-size 0;
   width: 50%;
   background-color: #36e640;
-  font-size: $font-size-large;
+  font-size: 1.6rem;
   border-style: none;
 }
 
@@ -73,7 +73,7 @@ button:disabled {
   margin: $xs-size 0;
   width: 50%;
   background-color: #e63636;
-  font-size: $font-size-large;
+  font-size: 1.6rem;
   border-style: none;
 }
 
@@ -90,7 +90,7 @@ button:disabled {
 
 .button--options {
   background-color: #0000001a;
-  z-index: 2;
+  z-index: 3;
   border-radius: 100%;
   width: $l-size;
   height: $l-size;
