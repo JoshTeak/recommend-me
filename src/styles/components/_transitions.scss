@@ -23,24 +23,17 @@
 }
 
 .swipe-view-container {
-  height: calc(100vh - 7rem - 0.8rem);
+  height: calc(100vh - 68px - 4.8rem);
 }
 
 .swipeableView {
-  z-index: 0;
-  height: calc(100vh - 7rem - 0.8rem);
-  width: 100vw;
-  background: white;
+  z-index: 1;
+  position: relative;
 }
 
-.firstSwipeableView {
-	z-index: 1;
-	width: 100%;
-	position: absolute;
-}
-
-.secondSwipeableView {
-	z-index: -1;
+.swipeableView-positioning{
+  position: absolute;
+  width: 100%;
 }
 
 .dummie-view {

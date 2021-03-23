@@ -6,17 +6,17 @@ class MovieDesicion extends React.Component {
 	};
 
 	positiveClicked = () => {
-		this.props.positiveClicked(this.props.movie);
+		this.props.positiveClicked();
 	}
 
 	negativeClicked = () => {
-		this.props.negativeClicked(this.props.movie);
+		this.props.negativeClicked();
 	}
 
 	render() {
 		return (
 			<div className="page-layout">
-				<div className="box-layout">
+				<div className={`box-layout box-layout${this.props.cardNumber}`}>
 					<div className="box-movie-card-layout"> 
 			    		<div className="box-layout__poster">
 				    		<img 
@@ -24,19 +24,22 @@ class MovieDesicion extends React.Component {
 						      alt="new"
 						    />
 					    </div>
-					    <div className="box-loyout__bottom-info">
-			    			<p className="box-layout__title">{this.props.movie.title}</p>
-			    			{
-								this.props.pageType === "SEEN" ?
-							    <div className="button--pair">
-								    <button className="button--yes" onClick={this.positiveClicked}>Seen</button>
-								    <button className="button--no" onClick={this.negativeClicked}>Haven't seen</button>
-							    </div> :
-							    <div className="button--pair">
-								    <button className="button--yes" onClick={this.positiveClicked}>Recommend</button>
-								    <button className="button--no" onClick={this.negativeClicked}>Don't Recommend</button>
-							    </div>
-							}
+					    <div className="box-loyout__bottom">
+						    <div className="button--pair">
+							    <button className="button--desicion" onClick={this.positiveClicked}>
+							    	<div className="icon-container yes-icon-container">
+			                          <img className="icon" src="/images/Checkmark Circle.png" alt="Checkmark Circle" />
+			                        </div>
+							    </button>
+							    <button className="button--desicion" onClick={this.negativeClicked}>
+							    	<div className="icon-container no-icon-container">
+			                          <img className="icon" src="/images/Cancel Close Circle.png" alt="Cancel Close Circle" />
+			                        </div>
+							    </button>
+						    </div> 
+							<div className="box-loyout__bottom-info-with-buttons">
+			    				<p className="box-layout__title">{this.props.movie.title}</p>
+			    			</div>
 					    </div>
 				    </div>
 			    </div>

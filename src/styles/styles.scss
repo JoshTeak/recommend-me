@@ -1,8 +1,9 @@
 @import './base/settings';
 @import './base/base';
+@import './components/icon';
 @import './components/box-layout';
 @import './components/button';
-@import './components/header';
+@import './components/footer';
 @import './components/content-container';
 @import './components/visibility';
 @import './components/list';
@@ -10,4 +11,4 @@
 @import './components/transitions';
 @import './components/login';
 @import './components/dropdown-list';
-@import './components/icon';
+@import './components/page';

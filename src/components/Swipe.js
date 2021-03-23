@@ -1,19 +1,15 @@
 import React from "react";
-import SwipeableViews from "react-swipeable-views";
-import MovieDesicion from './MovieDesicion';
 import LoadingPage from './LoadingPage';
+import Card from './Card';
 
 class Swipe extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      swipeableActions: '',
-      currentFirstIndex: 1,
-      currentSecondIndex: 1,
-      currentMovieSecond: null,
-      currentMovieFirst: null,
       initializedFirst: false,
-      initializedSecond: false,
+      movieObject: {},
+      cardArray: [{position: 0}, {position: 1}, {position: 2}],
+      movieArray: [{}, {}, {}]
     }
   }
 
@@ -22,140 +18,74 @@ class Swipe extends React.Component {
   }
 
   initializePage = () => {
-    const myFirstMovie = this.getFirstMovie();
+    const myMovieArray = this.getMovieArray();
+
+    const firstMovie = {[Object.keys(myMovieArray)[0]]: myMovieArray[Object.keys(myMovieArray)[0]]};
+    const secondMovie = {[Object.keys(myMovieArray)[1]]: myMovieArray[Object.keys(myMovieArray)[1]]};
+    const thirdMovie = {[Object.keys(myMovieArray)[2]]: myMovieArray[Object.keys(myMovieArray)[2]]};
+
+    const newMovieArray = [firstMovie, secondMovie, thirdMovie]
+
     this.setState({ 
-      currentMovieFirst: myFirstMovie,
-      initializedFirst: true
-    });  
-    this.setState({ 
-      currentMovieSecond: this.props.findNewMovie(myFirstMovie),
-      initializedSecond: true
+      movieObject: myMovieArray,
+      initializedFirst: true,
+      movieArray: newMovieArray
     }); 
   }
 
-  getFirstMovie = () => {
-    return (this.props.findNewMovie(this.state.currentMovieSecond))
+  getMovieArray = () => {
+    return (this.props.findNewMovie(this.state.movieObject))
   }
 
-  indexChangeFirst = (index) => {
-    this.setState({currentFirstIndex: index})
+  positiveClicked = (movie) => {
+    this.props.positiveClicked(movie);
   }
 
-  indexChangeSecond = (index) => {
-    this.setState({currentSecondIndex: index})
+  negativeClicked = (movie) => {
+    this.props.negativeClicked(movie);
   }
 
-  transitionEndFirst = () => {
-    const firstSwipeableView = document.getElementsByClassName("firstSwipeableView")[0];
-    const secondSwipeableView = document.getElementsByClassName("secondSwipeableView")[0];
-    let newMovie = '';
-    switch(this.state.currentFirstIndex) {
+  changeCards = (movie, cardNumber) => {
+    let newCardArary;
+     switch(this.state.cardArray[0].position) {
       case 0:
-        firstSwipeableView.style.zIndex = -1;
-        secondSwipeableView.style.zIndex = 1;
-        this.negativeClickedFirst();
-
-        this.props.negativeClicked(this.state.currentMovieFirst);
-        newMovie = this.props.findNewMovie(this.state.currentMovieSecond)
-        this.setState({ currentFirstIndex: 0, currentMovieFirst: newMovie});
+        newCardArary = [{position: 2}, {position: 0}, {position: 1}];
         break;
       case 1:
-        firstSwipeableView.style.opacity = 1;
-        firstSwipeableView.style.background = 'white';
+        newCardArary = [{position: 0}, {position: 1}, {position: 2}];
         break;
       case 2:
-        firstSwipeableView.style.zIndex = -1;
-        secondSwipeableView.style.zIndex = 1;
-        this.positiveClickedFirst();
-
-        this.props.positiveClicked(this.state.currentMovieFirst);
-        newMovie = this.props.findNewMovie(this.state.currentMovieSecond)
-        this.setState({ currentFirstIndex: 2, currentMovieFirst: newMovie});
+        newCardArary = [{position: 1}, {position: 2}, {position: 0}];
         break;
     }
-    this.setState({ currentFirstIndex: 1});
-  }
+    let myMovieArray = this.state.movieObject;
+    delete myMovieArray[movie.id];
+    myMovieArray = this.props.findNewMovie(myMovieArray);
 
-  transitionEndSecond = () => {
-    const firstSwipeableView = document.getElementsByClassName("firstSwipeableView")[0];
-    const secondSwipeableView = document.getElementsByClassName("secondSwipeableView")[0];
-    let newMovie = '';
-    switch(this.state.currentSecondIndex) {
-      case 0:
-        secondSwipeableView.style.zIndex = -1;
-        firstSwipeableView.style.zIndex = 1;
-        this.negativeClickedSecond();
+    let myotherMovieArray = this.state.movieArray[cardNumber];
+    delete myotherMovieArray[movie.id];
+    myotherMovieArray = this.props.findNewMovie(myotherMovieArray);
 
-        this.props.negativeClicked(this.state.currentMovieSecond);
-        newMovie = this.props.findNewMovie(this.state.currentMovieFirst);
-        this.setState({ currentSecondIndex: 0, currentMovieSecond: newMovie});
-        break;
-      case 1:
-        secondSwipeableView.style.opacity = 1;
-        secondSwipeableView.style.background = 'white';
-        break;
-      case 2:
-        secondSwipeableView.style.zIndex = -1;
-        firstSwipeableView.style.zIndex = 1;
-        this.positiveClickedSecond();
+    let newMovieId;
+    Object.keys(myotherMovieArray).forEach((movie) => {
+      let latch = false
+      this.state.movieArray.forEach((subMovie) => {
+        if([movie][0] === [subMovie][0])
+        {
+          latch = true;
+          newMovieId = [movie][0];
+        } 
+      })
+      if(!latch)
+      {
+        newMovieId = [movie][0]
+      }
+    })
 
-        this.props.positiveClicked(this.state.currentMovieSecond);
-        newMovie = this.props.findNewMovie(this.state.currentMovieFirst);
-        this.setState({ currentSecondIndex: 2, currentMovieSecond: newMovie});
+    let newArray = this.state.movieArray;
+    newArray[cardNumber] = {[newMovieId]: myotherMovieArray[newMovieId]};
 
-        break;
-    }
-    this.setState({ currentSecondIndex: 1});
-  }
-
-  positiveClickedFirst = () => {
-    this.setState({ currentFirstIndex: 2});
-    const firstSwipeableView = document.getElementsByClassName("firstSwipeableView")[0];
-    firstSwipeableView.style.background = '#ff000000';
-  }
-
-  negativeClickedFirst = () => {
-    this.setState({ currentFirstIndex: 0});
-    const firstSwipeableView = document.getElementsByClassName("firstSwipeableView")[0];
-    firstSwipeableView.style.background = '#ff000000';
-  }
-
-  positiveClickedSecond = () => {
-    this.setState({ currentSecondIndex: 2});
-    const secondSwipeableView = document.getElementsByClassName("secondSwipeableView")[0];
-    secondSwipeableView.style.background = '#ff000000';
-  }
-
-  negativeClickedSecond = () => {
-    this.setState({ currentSecondIndex: 0});
-    const secondSwipeableView = document.getElementsByClassName("secondSwipeableView")[0];
-    secondSwipeableView.style.background = '#ff000000';
-  }
-
-  switchingFirst = (index) => {
-    const firstSwipeableView = document.getElementsByClassName("firstSwipeableView")[0];
-    let changeValue;
-    if(index < 1)
-    {
-      changeValue = index;
-    } else if(index > 1) {
-      changeValue = (2 - index);
-    }
-    firstSwipeableView.style.background = '#ff000000';
-    firstSwipeableView.style.opacity = 0.5 + changeValue / 2;
-  }
-
-  switchingSecond = (index) => {
-    const secondSwipeableView = document.getElementsByClassName("secondSwipeableView")[0];
-    let changeValue;
-    if(index < 1)
-    {
-      changeValue = index;
-    } else if(index > 1) {
-      changeValue = (2 - index);
-    }
-    secondSwipeableView.style.background = '#ff000000';
-    secondSwipeableView.style.opacity = 0.5 + changeValue / 2;
+    this.setState({movieObject: myMovieArray, cardArray: newCardArary})
   }
 
   render() {
@@ -163,58 +93,23 @@ class Swipe extends React.Component {
       <div className="swipe-view-container">
         {
           this.state.initializedFirst ? 
-          <SwipeableViews
-            className="swipeableView firstSwipeableView"
-            enableMouseEvents
-            action={(actions) => this.setState({ swipeableActions: actions })}
-            resistance
-            animateHeight
-            index={this.state.currentFirstIndex}
-            onChangeIndex={this.indexChangeFirst}
-            onTransitionEnd={this.transitionEndFirst}
-            onSwitching={this.switchingFirst}
-            animateHeight={true}
-            style={{overflow: 'hidden'}}
-          >
-            <div className="dummie-view">
-            </div>
-            <MovieDesicion 
-              movie={this.state.currentMovieFirst}
-              positiveClicked={this.positiveClickedFirst}
-              negativeClicked={this.negativeClickedFirst}
-              pageType={this.props.pageType}
-            />
-            <div className="dummie-view">
-            </div>
-          </SwipeableViews>
-          : <LoadingPage />
-        }
-        {
-          this.state.initializedSecond ? 
-          <SwipeableViews
-            className="swipeableView secondSwipeableView"
-            enableMouseEvents
-            action={(actions) => this.setState({ swipeableActions: actions })}
-            resistance
-            animateHeight
-            index={this.state.currentSecondIndex}
-            onChangeIndex={this.indexChangeSecond}
-            onTransitionEnd={this.transitionEndSecond}
-            onSwitching={this.switchingSecond}
-            animateHeight={true}
-            style={{overflow: 'hidden'}}
-          >
-            <div className="dummie-view">
-            </div>
-            <MovieDesicion
-              movie={this.state.currentMovieSecond}
-              positiveClicked={this.positiveClickedSecond}
-              negativeClicked={this.negativeClickedSecond}
-              pageType={this.props.pageType}
-            />
-            <div className="dummie-view">
-            </div>
-          </SwipeableViews>
+          <div>
+            {
+              this.state.movieArray.map((movie, index) => {
+                const movieId = Object.keys(this.state.movieArray[index])[0]
+                const movieToCard = movie[Object.keys(this.state.movieArray[index])[0]];
+                return (
+                <Card
+                  movie={{...movieToCard, id: movieId}}
+                  cardNumber={index}
+                  positionArray={this.state.cardArray}
+                  changeCardPositions={this.changeCards}
+                  positiveClicked={this.positiveClicked}
+                  negativeClicked={this.negativeClicked}
+                />
+              )})
+            }
+          </div>
           : <LoadingPage />
         }
       </div>

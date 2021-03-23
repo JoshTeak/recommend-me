@@ -9,6 +9,7 @@ import LoginPage from '../components/LoginPage';
 import PrivateRoute from './PrivateRoute';
 import PublicRoute from './PublicRoute';
 import Header from '../components/Header';
+import Footer from '../components/Footer';
 
 import { TransitionGroup, CSSTransition } from "react-transition-group";
 
@@ -21,6 +22,7 @@ const AppRouter = () => (
       <Route path="*">
         <Header />
         <Page />
+        <Footer />
       </Route>
     </Switch>
   </Router>

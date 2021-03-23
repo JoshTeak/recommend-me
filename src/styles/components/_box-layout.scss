@@ -1,38 +1,50 @@
 .box-layout {
+  filter: drop-shadow(1px 1px 2px gray);
+  height: calc(100vh - 68px - 4.8rem);
+  transition: transform 0.2s ease;
 }
 
 .box-layout-separators {
-  margin: 0 $xs-size;
+  padding-right: $l-size;
 }
 
 .box-layout-list {
   overflow: auto;
   display: flex;
+  padding-left: $l-size;
+  height: calc(100vh - 68px - 4.8rem);
 }
 
 .box-layout__title {
   font-size: $font-size-large;
   margin: 0;
   overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-  max-width: 29rem;
+  max-width: 52vw;
+  height: 2rem;
+  margin: auto;
+  width: max-content;
 }
 
 .box-layout__subtitle {
   font-size: $font-size-large;
   margin: 0;
   overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
   max-width: 34rem;
+  height: 2rem;
+}
+
+.box-loyout__bottom {    
+  border-radius: 0 0 1.2rem 1.2rem;
+  background-color: $almost-white;
+  max-width: inherit;
 }
 
 .box-loyout__bottom-info {    
-  border-radius: 0 0 1.2rem 1.2rem;
-  background-color: $secondary-color;
-  padding: $xs-size $xs-size 0 $xs-size;
-  max-width: inherit;
+  padding: $m-size;
+}
+
+.box-loyout__bottom-info-with-buttons {    
+  padding: 51px $m-size $m-size $m-size;
 }
 
 .box-movie-card-layout {
@@ -40,7 +52,6 @@
   margin: auto;
   display: flex;
   flex-direction: column;
-  border: solid 1px #dedede;
   border-radius: $m-corner;
 }
 
@@ -48,19 +59,10 @@
   display: block;
   border-radius: 1.2rem 1.2rem 0 0;
   max-width: calc(100vw - 2px);
-  height: calc(100vh - 7rem - 0.8rem - 78px - 2px);
-}
-
-.recc-page img {
-  height: calc(100vh - 7rem - 0.8rem - 86px - 2px);
+  height: calc(100vh - 68px - 87px - 4.8rem - 48px - 4px);  //4px are for shadowing
+  min-height: 317px;
 }
 
 .find-page img {
-  height: calc(100vh - 7rem - 0.8rem - 108px - 2px);
-}
-
-.page-layout {
-  background-color: #ffffff00;
-  display: flex;
-  justify-content: center;
+  height: calc(100vh - 68px - 132px - 4.8rem - 48px);
 }

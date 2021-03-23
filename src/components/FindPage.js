@@ -137,7 +137,10 @@ export class FindPage extends React.Component {
 
 	render() {
 		return (
-			<div>
+			<div className="page-background">
+				<div className="page-title">
+					<h1>My List</h1>
+				</div>
 			    {
 			    	this.state.initialization ? 
 			    	<div className="box-layout-list">
@@ -151,12 +154,14 @@ export class FindPage extends React.Component {
 										      alt="new"
 										    />
 									    </div>
-									    <div className="box-loyout__bottom-info">
-							    			<p className="box-layout__subtitle">{this.state.recommendedMovieList[movie].title}</p>
-							    			<p className="box-layout__subtitle">Recommendation score: {this.state.recommendedMovieList[movie].score}</p>
-							    			<p className="box-layout__subtitle">IMDb rating: {this.state.recommendedMovieList[movie].rating}</p>
-										    <p className="box-layout__subtitle">Released: {this.state.recommendedMovieList[movie].released}</p>
-										    <p className="box-layout__subtitle">Genre: {this.state.recommendedMovieList[movie].genre}</p>
+									    <div className="box-loyout__bottom">
+									    	<div className="box-loyout__bottom-info">
+								    			<p className="box-layout__subtitle">{this.state.recommendedMovieList[movie].title}</p>
+								    			<p className="box-layout__subtitle">Recommendation score: {Math.round(this.state.recommendedMovieList[movie].score * 100) / 100}</p>
+								    			<p className="box-layout__subtitle">IMDb rating: {this.state.recommendedMovieList[movie].rating}</p>
+											    <p className="box-layout__subtitle">Released: {this.state.recommendedMovieList[movie].released}</p>
+											    <p className="box-layout__subtitle">Genre: {this.state.recommendedMovieList[movie].genre}</p>
+										    </div>
 										</div>
 								    </div>
 							    </div>

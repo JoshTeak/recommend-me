@@ -48,42 +48,46 @@ export class SeenPage extends React.Component {
 		this.props.startEditUser(this.props.auth.uid, {seenList: seenList});
 	}
 
-	findNewMovie = (oldMovie) => {
+	findNewMovie = (oldMovieObject) => {
 		let movieId = null;
+		let potentialMovie = null;
+		let newMovieObject = {};
 		let i;
+
 		for (i = 0; i < Object.keys(this.props.moviesList).length; i++)
 		{
 			movieId = Object.keys(this.props.moviesList)[i]
+			
 			if(!this.props.user.seenList || !this.props.user.seenList[movieId])
 			{
-				if(!oldMovie || oldMovie.id[0] !== [movieId][0])
-				{
-					this.setState(() => ({
-						initialization: true,
-						insufficientMovies: false
-					})); 
-					return {
-							title: this.props.moviesList[movieId].title,
-							id: [movieId],
-							genre: this.props.moviesList[movieId].genre,
-							poster: this.props.moviesList[movieId].poster,
-							rated: this.props.moviesList[movieId].rated,
-							released: this.props.moviesList[movieId].released,
-							rating: this.props.moviesList[movieId].rating
-					};
-				}
+				this.setState(() => ({
+					initialization: true,
+					insufficientMovies: false
+				})); 
+
+				if(Object.keys(newMovieObject).length > 2)
+				{	
+					return newMovieObject;
+				} else if(!Object.keys(oldMovieObject)[movieId]) {
+
+					newMovieObject[movieId] = this.props.moviesList[movieId]
+				}				
 			}
 		} 
 		this.setState(() => ({
 			initialization: true,
 			insufficientMovies: true
 		})); 
+		return oldMovieObject;
 		// TODO include condition when movie list is finished
 	}
 
 	render() {
 		return (
-			<div>
+			<div className="page-background">
+				<div className="page-title">
+					<h1>Seen</h1>
+				</div>
 			    {
 			    	this.state.initialization ? 
 			    	<div>
@@ -91,7 +95,6 @@ export class SeenPage extends React.Component {
 				    		this.state.insufficientMovies ? 
 				    		<p>Need more movies</p> :
 				    		<Swipe 
-				    			pageType={"SEEN"}
 				    			findNewMovie={this.findNewMovie}
 				    			positiveClicked={this.seenClicked}
 				    			negativeClicked={this.notSeenClicked}

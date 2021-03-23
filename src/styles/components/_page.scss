@@ -1,0 +1,21 @@
+
+
+.page-title {
+	color: white;
+}
+
+.page-title h1 {
+	font-size: $font-size-xxlarge;
+	margin: 0;
+	padding: $m-size $l-size;
+}
+
+.page-background {
+	background: linear-gradient(330deg, rgba(234,154,104,1) 0%, rgba(234,104,106,1) 50%, rgba(220,75,92,1) 100%);
+}
+
+.page-layout {
+  background-color: #ffffff00;
+  display: flex;
+  justify-content: center;
+}
