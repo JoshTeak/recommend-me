@@ -1,0 +1,51 @@
+.options-header-setup {
+  display: flex;
+}
+
+.options-page-title {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  color: white;
+}
+
+.options-page-title h1 {
+  font-size: $font-size-xxlarge;
+  margin: 0;
+  padding: $m-size $l-size;
+}
+
+.options-back-button{
+  background-color: #ffffff00;
+  border: none;
+  font-size: 4rem;
+}
+
+.options-body {
+  height: calc(100vh - 68px - 4.8rem);
+  background-color: $off-white;
+}
+
+.options-list {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: $s-size;
+}
+
+.option {
+	display: flex;
+  flex-direction: row;
+  align-items: center;
+  padding: $xs-size $m-size;
+  background-color: $off-white;
+  width: 100%;
+  justify-content: end;
+  padding: 0.8rem 0.8rem;
+}
+
+.option-name {
+	margin: 0;
+  margin-left: 2rem;
+  font-size: $font-size-large;
+}

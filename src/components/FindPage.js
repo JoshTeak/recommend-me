@@ -4,6 +4,7 @@ import { startSetUser } from '../actions/user';
 import { startReadMovies } from '../actions/moviesList';
 import { startReadUsers } from '../actions/users';
 import LoadingPage from './LoadingPage';
+import Options from './Options';
 
 export class FindPage extends React.Component {
 	constructor(props) {
@@ -138,8 +139,11 @@ export class FindPage extends React.Component {
 	render() {
 		return (
 			<div className="page-background">
-				<div className="page-title">
-					<h1>My List</h1>
+				<div className="header-row">
+					<div className="page-title">
+						<h1>My List</h1>
+					</div>
+					<Options className="options-tab" />
 				</div>
 			    {
 			    	this.state.initialization ? 

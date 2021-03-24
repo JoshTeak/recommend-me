@@ -4,6 +4,7 @@ import { startEditUser, startSetUser } from '../actions/user';
 import { startReadMovies } from '../actions/moviesList';
 import LoadingPage from './LoadingPage';
 import Swipe from "./Swipe";
+import Options from './Options';
 
 export class SeenPage extends React.Component {
 	constructor(props) {
@@ -85,8 +86,11 @@ export class SeenPage extends React.Component {
 	render() {
 		return (
 			<div className="page-background">
-				<div className="page-title">
-					<h1>Seen</h1>
+				<div className="header-row">
+					<div className="page-title">
+						<h1>Seen</h1>
+					</div>
+					<Options className="options-tab" />
 				</div>
 			    {
 			    	this.state.initialization ? 

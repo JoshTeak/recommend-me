@@ -4,11 +4,11 @@ import { createBrowserHistory } from 'history';
 import SeenPage from '../components/SeenPage'; 
 import RecommendPage from '../components/RecommendPage';
 import FindPage from '../components/FindPage'; 
+import MenuPage from '../components/MenuPage';
 import NotFoundPage from '../components/NotFoundPage';
 import LoginPage from '../components/LoginPage';
 import PrivateRoute from './PrivateRoute';
 import PublicRoute from './PublicRoute';
-import Header from '../components/Header';
 import Footer from '../components/Footer';
 
 import { TransitionGroup, CSSTransition } from "react-transition-group";
@@ -20,7 +20,6 @@ const AppRouter = () => (
     <Switch>
       <PublicRoute path="/" component={LoginPage} exact={true} />
       <Route path="*">
-        <Header />
         <Page />
         <Footer />
       </Route>
@@ -55,6 +54,7 @@ export const Page = () => {
               <PrivateRoute path="/seen" component={SeenPage} />
               <PrivateRoute path="/recommend" component={RecommendPage} />
               <PrivateRoute path="/find" component={FindPage} />
+              <PrivateRoute path="/menu" component={MenuPage} />
               <Route component={NotFoundPage} />
             </Switch>
           </CSSTransition>
@@ -83,6 +83,8 @@ export const LocationValue = (path) => {
       return 1;
     case '/find':
       return 2;
+    case './menu':
+      return 3;
     default:
       return 10;
   }

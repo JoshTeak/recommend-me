@@ -34,10 +34,6 @@ button:disabled {
   font-size: $font-size-small;
 }
 
-button--link-selector {
-  
-}
-
 .button--link:focus {
   outline: none;
   font-size: $font-size-large;
@@ -94,15 +90,8 @@ button--link-selector {
   background: #888;
 }
 
-.button-group {
-  margin: $xs-size;
-  position: absolute;
-  display: flex;
-  align-items: center;
-}
-
 .button--options {
-  background-color: #ffffff5e;
+  background-color: #ffffff00;
   z-index: 3;
   border-radius: 100%;
   width: $l-size;
@@ -121,9 +110,8 @@ button--link-selector {
   left: 1px;
 }
 
-.button-option-dot {
-  color: white;
-  line-height: 0.2;
-  font-size: $l-size;
+.button-options-selector {
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
-
