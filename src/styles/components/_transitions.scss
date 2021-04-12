@@ -26,6 +26,10 @@
   height: calc(100vh - 68px - 4.8rem);
 }
 
+.swipe-view-container-initialized {
+  height: inherit;
+}
+
 .swipeableView {
   z-index: 1;
   position: relative;

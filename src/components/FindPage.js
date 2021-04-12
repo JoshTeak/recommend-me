@@ -101,7 +101,7 @@ export class FindPage extends React.Component {
 						numberOfRecommendations++;
 					})
 
-					recommendationScore = movieRecommendRating*100/numberOfRecommendations;
+					recommendationScore = (50 + movieRecommendRating * 50 / numberOfRecommendations);
 					recommendListSamples.push({score: recommendationScore, movie: movieId});
 				}
 			}

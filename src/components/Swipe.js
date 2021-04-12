@@ -1,6 +1,7 @@
 import React from "react";
 import LoadingPage from './LoadingPage';
 import Card from './Card';
+import { history } from '../routers/AppRouter';
 
 class Swipe extends React.Component {
   constructor(props) {
@@ -11,6 +12,8 @@ class Swipe extends React.Component {
       cardArray: [{position: 0}, {position: 1}, {position: 2}],
       movieArray: [{}, {}, {}]
     }
+
+    this.moviesAvailable = false;
   }
 
   componentDidMount() {
@@ -18,16 +21,37 @@ class Swipe extends React.Component {
   }
 
   initializePage = () => {
-    const myMovieArray = this.getMovieArray();
+    const myMovieObject = this.getMovieArray();
+    let firstMovie;
+    let secondMovie;
+    let thirdMovie;
 
-    const firstMovie = {[Object.keys(myMovieArray)[0]]: myMovieArray[Object.keys(myMovieArray)[0]]};
-    const secondMovie = {[Object.keys(myMovieArray)[1]]: myMovieArray[Object.keys(myMovieArray)[1]]};
-    const thirdMovie = {[Object.keys(myMovieArray)[2]]: myMovieArray[Object.keys(myMovieArray)[2]]};
+    if([Object.keys(myMovieObject)[0]][0] !== undefined)
+    {
+      firstMovie = {[Object.keys(myMovieObject)[0]]: myMovieObject[Object.keys(myMovieObject)[0]]};
+    } else 
+    {
+      firstMovie = null;
+    }
+    if([Object.keys(myMovieObject)[1]][0] !== undefined)
+    {
+      secondMovie = {[Object.keys(myMovieObject)[1]]: myMovieObject[Object.keys(myMovieObject)[1]]};
+    } else 
+    {
+      secondMovie = null;
+    }
+    if([Object.keys(myMovieObject)[2]][0] !== undefined)
+    {
+      thirdMovie = {[Object.keys(myMovieObject)[2]]: myMovieObject[Object.keys(myMovieObject)[2]]};
+    } else 
+    {
+      thirdMovie = null;
+    }
 
     const newMovieArray = [firstMovie, secondMovie, thirdMovie]
 
     this.setState({ 
-      movieObject: myMovieArray,
+      movieObject: myMovieObject,
       initializedFirst: true,
       movieArray: newMovieArray
     }); 
@@ -58,34 +82,39 @@ class Swipe extends React.Component {
         newCardArary = [{position: 1}, {position: 2}, {position: 0}];
         break;
     }
-    let myMovieArray = this.state.movieObject;
-    delete myMovieArray[movie.id];
-    myMovieArray = this.props.findNewMovie(myMovieArray);
 
-    let myotherMovieArray = this.state.movieArray[cardNumber];
-    delete myotherMovieArray[movie.id];
-    myotherMovieArray = this.props.findNewMovie(myotherMovieArray);
+    let myMovieObject = this.state.movieObject;
+    delete myMovieObject[movie.id];
+    myMovieObject = this.props.findNewMovie(myMovieObject);
 
     let newMovieId;
-    Object.keys(myotherMovieArray).forEach((movie) => {
-      let latch = false
-      this.state.movieArray.forEach((subMovie) => {
-        if([movie][0] === [subMovie][0])
-        {
-          latch = true;
-          newMovieId = [movie][0];
-        } 
-      })
-      if(!latch)
-      {
-        newMovieId = [movie][0]
-      }
-    })
-
     let newArray = this.state.movieArray;
-    newArray[cardNumber] = {[newMovieId]: myotherMovieArray[newMovieId]};
 
-    this.setState({movieObject: myMovieArray, cardArray: newCardArary})
+    if(Object.keys(myMovieObject).length === 3)
+    {
+      newMovieId = Object.keys(myMovieObject)[2]
+      newArray[cardNumber] = {[newMovieId]: myMovieObject[newMovieId]};
+    } else {
+      newArray[cardNumber] = null;
+    }
+
+    this.setState({movieObject: myMovieObject, cardArray: newCardArary})
+  }
+
+  determineIfEmpty = () => {
+    let i;
+    for(i = 0; i < this.state.movieArray.length; i++)
+    {
+      if(this.state.movieArray[i] !== null)
+      {
+        this.moviesAvailable = true;
+        break;
+      } 
+      else
+      {
+        this.moviesAvailable = false;
+      }
+    }
   }
 
   render() {
@@ -93,21 +122,47 @@ class Swipe extends React.Component {
       <div className="swipe-view-container">
         {
           this.state.initializedFirst ? 
-          <div>
+          <div className="swipe-view-container-initialized">
+            {this.determineIfEmpty()}
             {
-              this.state.movieArray.map((movie, index) => {
-                const movieId = Object.keys(this.state.movieArray[index])[0]
-                const movieToCard = movie[Object.keys(this.state.movieArray[index])[0]];
-                return (
-                <Card
-                  movie={{...movieToCard, id: movieId}}
-                  cardNumber={index}
-                  positionArray={this.state.cardArray}
-                  changeCardPositions={this.changeCards}
-                  positiveClicked={this.positiveClicked}
-                  negativeClicked={this.negativeClicked}
-                />
-              )})
+              this.moviesAvailable ? 
+              <div>
+                {
+                  this.state.movieArray.map((movie, index) => {
+                    if(!!movie)
+                    {
+                      const movieId = Object.keys(this.state.movieArray[index])[0]
+                      const movieToCard = movie[Object.keys(this.state.movieArray[index])[0]];
+                      return (
+                        <Card
+                          movie={{...movieToCard, id: movieId}}
+                          cardNumber={index}
+                          positionArray={this.state.cardArray}
+                          changeCardPositions={this.changeCards}
+                          positiveClicked={this.positiveClicked}
+                          negativeClicked={this.negativeClicked}
+                        />
+                      )
+                    }
+                  })
+                }
+              </div> : 
+              <div className="error-box-layout">
+                <div className="error-message">
+                  <h1 className="error-title">Need more movies</h1>
+                  <p className="error-body">{this.props.noMoviesError}</p>
+                  {
+                    history.location.pathname !== "/seen" ?
+                    <button className="button" onClick={() => {
+                      history.push({
+                        pathname: "/seen",
+                        state: { previousPath: history.location}
+                      });
+                    }}>Find more movies
+                    </button> : ''
+                  }
+                </div>
+              </div>
             }
           </div>
           : <LoadingPage />

@@ -1,0 +1,37 @@
+.error-box-layout {
+	height: inherit;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.error-message {
+  background-color: #00000012;
+  position: absolute;
+  z-index: 1;
+  padding: $m-l-size;
+  margin: $s-size;
+  border-radius: 0.4rem;
+}
+
+.error-title {
+  color: white;
+}
+
+.error-body {
+  color: #ffffffa8;
+  width: 25vw;
+  margin-bottom: $m-size;
+  min-width: 27rem;
+  border-radius: $s-corner;
+  font-size: $font-size-large;
+}
+
+.error-message button {
+  font-size: $font-size-xlarge;
+  font-weight: bold;
+  padding: $m-l-size;
+  background-color: #c7323285;
+  color: #ffffff9e;
+  border-radius: $m-corner;
+}

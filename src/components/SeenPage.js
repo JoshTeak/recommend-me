@@ -12,8 +12,9 @@ export class SeenPage extends React.Component {
 
 		this.state = {
 			initialization: false,
-			insufficientMovies: false
+			errorMessage: 'Oops! We have run out of movies for you to look at. Try again at a later date.'
 		};
+		this.moviesAvailable = false;
 	};
 
 	componentDidMount() {
@@ -61,11 +62,6 @@ export class SeenPage extends React.Component {
 			
 			if(!this.props.user.seenList || !this.props.user.seenList[movieId])
 			{
-				this.setState(() => ({
-					initialization: true,
-					insufficientMovies: false
-				})); 
-
 				if(Object.keys(newMovieObject).length > 2)
 				{	
 					return newMovieObject;
@@ -75,12 +71,7 @@ export class SeenPage extends React.Component {
 				}				
 			}
 		} 
-		this.setState(() => ({
-			initialization: true,
-			insufficientMovies: true
-		})); 
 		return oldMovieObject;
-		// TODO include condition when movie list is finished
 	}
 
 	render() {
@@ -94,17 +85,12 @@ export class SeenPage extends React.Component {
 				</div>
 			    {
 			    	this.state.initialization ? 
-			    	<div>
-				    	{
-				    		this.state.insufficientMovies ? 
-				    		<p>Need more movies</p> :
-				    		<Swipe 
-				    			findNewMovie={this.findNewMovie}
-				    			positiveClicked={this.seenClicked}
-				    			negativeClicked={this.notSeenClicked}
-				    		/>
-						}
-			    	</div>
+			    	<Swipe 
+		    			findNewMovie={this.findNewMovie}
+		    			positiveClicked={this.seenClicked}
+		    			negativeClicked={this.notSeenClicked}
+		    			determineIfEmpty={this.determineIfEmpty}
+		    		/>
 			    	: <LoadingPage />
 			    }
 			</div>

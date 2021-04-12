@@ -12,7 +12,7 @@ export class RecommendPage extends React.Component {
 
 		this.state = {
 			initialization: false,
-			insufficientMovies: false
+			errorMessage: 'You have no more movies to recommend! If you would like to find more, click the button below.'
 		};
 	};
 
@@ -63,11 +63,6 @@ export class RecommendPage extends React.Component {
 			{
 				if(!this.props.user.recommendedList || !this.props.user.recommendedList[movieId])
 				{
-					this.setState(() => ({
-						initialization: true,
-						insufficientMovies: false
-					})); 
-
 					if(Object.keys(newMovieObject).length > 2)
 					{	
 						return newMovieObject;
@@ -78,12 +73,7 @@ export class RecommendPage extends React.Component {
 				}				
 			}
 		} 
-		this.setState(() => ({
-			initialization: true,
-			insufficientMovies: true
-		})); 
-		return oldMovieObject;
-		// TODO include condition when movie list is finished
+		return newMovieObject;
 	}
 
 	render() {
@@ -97,17 +87,12 @@ export class RecommendPage extends React.Component {
 				</div>
 				{
 			    	this.state.initialization ? 
-			    	<div>
-				    	{
-				    		this.state.insufficientMovies ? 
-				    		<p>Need more movies</p> :
-				    		<Swipe 
-				    			findNewMovie={this.findNewMovie}
-				    			positiveClicked={this.recommendClicked}
-				    			negativeClicked={this.notRecommendClicked}
-				    		/>
-						}
-			    	</div>
+			    	<Swipe 
+		    			findNewMovie={this.findNewMovie}
+		    			positiveClicked={this.recommendClicked}
+		    			negativeClicked={this.notRecommendClicked}
+		    			noMoviesError={this.state.errorMessage}
+		    		/>
 			    	: <LoadingPage />
 			    }
 			</div>
