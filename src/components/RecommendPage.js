@@ -1,6 +1,7 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { startEditUser, startSetUser } from '../actions/user';
+import { startEditTempUser } from '../actions/tempUser';
 import { startReadMovies } from '../actions/moviesList';
 import LoadingPage from './LoadingPage';
 import Swipe from "./Swipe";
@@ -21,32 +22,82 @@ export class RecommendPage extends React.Component {
 	}
 
 	initializePage = () => {
-		if(this.props.user.length === 0 || this.props.moviesList.length === 0)				// only gets the moviesList and user if they dont already exist
-		{
-			this.props.startReadMovies().then(() => {
-		      	this.props.startSetUser(this.props.auth.uid).then(() => {
+		if(this.props.user.length === 0 && !!this.props.auth.uid)
+		{	
+			this.props.startSetUser(this.props.auth.uid).then(() => {
+				if(this.props.moviesList.length === 0)
+				{
+					this.props.startReadMovies().then(() => {
+						this.setState(() => ({
+							initialization: true
+						})); 
+				    });
+				} else {
+					this.setState(() => ({
+						initialization: true
+					})); 
+				}
+		    });
+		} else {
+			if(this.props.moviesList.length === 0)
+			{
+				this.props.startReadMovies().then(() => {
 					this.setState(() => ({
 						initialization: true
 					})); 
 		        });
-		    });
-		} else {
-			this.setState(() => ({
-				initialization: true
-			})); 
+			} else {
+				this.setState(() => ({
+					initialization: true
+				})); 
+			}
 		}
 	}
 
 	recommendClicked = (movieInfo) => {
-		let recommendedList = this.props.user.recommendedList;
-		recommendedList[movieInfo.id] = {movie: movieInfo.title, recommended: true};
-		this.props.startEditUser(this.props.auth.uid, {recommendedList: recommendedList});
+		if(this.props.auth.uid)
+		{
+			let recommendedList = this.props.user.recommendedList;
+			recommendedList[movieInfo.id] = {movie: movieInfo.title, recommended: true};
+			this.props.startEditUser(this.props.auth.uid, {recommendedList: recommendedList});
+		} else {
+			let recommendedList = this.props.tempUser.recommendedList;
+			recommendedList[movieInfo.id] = {movie: movieInfo.title, recommended: true};
+			this.props.startEditTempUser(this.props.tempUser.uid, {recommendedList: recommendedList});
+		}
 	}
 
 	notRecommendClicked = (movieInfo) => {
-		let recommendedList = this.props.user.recommendedList;
-		recommendedList[movieInfo.id] = {movie: movieInfo.title, recommended: false};
-		this.props.startEditUser(this.props.auth.uid, {recommendedList: recommendedList});
+		if(this.props.auth.uid)
+		{
+			let recommendedList = this.props.user.recommendedList;
+			recommendedList[movieInfo.id] = {movie: movieInfo.title, recommended: false};
+			this.props.startEditUser(this.props.auth.uid, {recommendedList: recommendedList});
+		} else {
+			let recommendedList = this.props.tempUser.recommendedList;
+			recommendedList[movieInfo.id] = {movie: movieInfo.title, recommended: false};
+			this.props.startEditTempUser(this.props.tempUser.uid, {recommendedList: recommendedList});
+		}
+	}
+
+	shuffle = (array) => {
+	  let currentIndex = array.length; 
+	  let temporaryValue; 
+	  let randomIndex;
+
+	  // While there remain elements to shuffle...
+	  while (0 !== currentIndex) {
+
+	    // Pick a remaining element...
+	    randomIndex = Math.floor(Math.random() * currentIndex);
+	    currentIndex -= 1;
+
+	    // And swap it with the current element.
+	    temporaryValue = array[currentIndex];
+	    array[currentIndex] = array[randomIndex];
+	    array[randomIndex] = temporaryValue;
+	  }
+	  return array;
 	}
 
 	findNewMovie = (oldMovieObject) => {
@@ -55,24 +106,49 @@ export class RecommendPage extends React.Component {
 		let newMovieObject = {};
 		let i;
 
-		for (i = 0; i < Object.keys(this.props.user.seenList).length; i++)
-		{
-			movieId = Object.keys(this.props.user.seenList)[i]
-			
-			if(this.props.user.seenList[movieId].seen)
-			{
-				if(!this.props.user.recommendedList || !this.props.user.recommendedList[movieId])
-				{
-					if(Object.keys(newMovieObject).length > 2)
-					{	
-						return newMovieObject;
-					} else if(!Object.keys(oldMovieObject)[movieId]) {
+		const shuffledMovies = this.props.moviesList.randomList;;
 
-						newMovieObject[movieId] = this.props.moviesList[movieId]
-					}
-				}				
+		if(this.props.auth.uid)
+		{
+			for (i = 0; i < shuffledMovies.length; i++)
+			{
+				movieId = shuffledMovies[i]
+				
+				if(!!this.props.user.seenList[movieId] && this.props.user.seenList[movieId].seen)
+				{
+					if(!this.props.user.recommendedList || !this.props.user.recommendedList[movieId])
+					{
+						if(Object.keys(newMovieObject).length > 2)
+						{	
+							return newMovieObject;
+						} else if(!Object.keys(oldMovieObject)[movieId]) {
+
+							newMovieObject[movieId] = this.props.moviesList.list[movieId]
+						}
+					}				
+				}
+			} 
+		} else if(!!this.props.tempUser.seenList)
+		{
+			for (i = 0; i < shuffledMovies.length; i++)
+			{
+				movieId = shuffledMovies[i]
+				
+				if(!!this.props.tempUser.seenList[movieId] && this.props.tempUser.seenList[movieId].seen)
+				{
+					if(!this.props.tempUser.recommendedList || !this.props.tempUser.recommendedList[movieId])
+					{
+						if(Object.keys(newMovieObject).length > 2)
+						{	
+							return newMovieObject;
+						} else if(!Object.keys(oldMovieObject)[movieId]) {
+
+							newMovieObject[movieId] = this.props.moviesList.list[movieId]
+						}
+					}				
+				}
 			}
-		} 
+		}
 		return newMovieObject;
 	}
 
@@ -102,12 +178,14 @@ export class RecommendPage extends React.Component {
 
 const mapDispatchToProps = (dispatch) => ({
 	startEditUser: (id, user) => dispatch(startEditUser(id, user)),
+	startEditTempUser: (id, user) => dispatch(startEditTempUser(id, user)),
 	startSetUser: (id) => dispatch(startSetUser(id)),
 	startReadMovies: () => dispatch(startReadMovies())
 });
 
 const mapStateToProps = (state) => ({
 	user: state.user,
+	tempUser: state.tempUser,
 	auth: state.auth,
 	moviesList: state.movies
 })

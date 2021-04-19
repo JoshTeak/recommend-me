@@ -22,6 +22,10 @@
   transition: transform 300ms;
 }
 
+.find-view-container {
+  height: calc(100vh - 68px - 4.8rem);
+}
+
 .swipe-view-container {
   height: calc(100vh - 68px - 4.8rem);
 }

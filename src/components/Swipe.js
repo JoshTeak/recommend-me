@@ -58,7 +58,8 @@ class Swipe extends React.Component {
   }
 
   getMovieArray = () => {
-    return (this.props.findNewMovie(this.state.movieObject))
+    const movie = this.props.findNewMovie(this.state.movieObject)
+    return movie;
   }
 
   positiveClicked = (movie) => {
@@ -86,7 +87,6 @@ class Swipe extends React.Component {
     let myMovieObject = this.state.movieObject;
     delete myMovieObject[movie.id];
     myMovieObject = this.props.findNewMovie(myMovieObject);
-
     let newMovieId;
     let newArray = this.state.movieArray;
 
@@ -97,7 +97,6 @@ class Swipe extends React.Component {
     } else {
       newArray[cardNumber] = null;
     }
-
     this.setState({movieObject: myMovieObject, cardArray: newCardArary})
   }
 

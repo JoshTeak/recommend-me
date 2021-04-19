@@ -3,8 +3,10 @@ import { connect } from 'react-redux';
 import { startSetUser } from '../actions/user';
 import { startReadMovies } from '../actions/moviesList';
 import { startReadUsers } from '../actions/users';
+import { startReadTempUsers } from '../actions/tempUsers';
 import LoadingPage from './LoadingPage';
 import Options from './Options';
+import { history } from '../routers/AppRouter';
 
 export class FindPage extends React.Component {
 	constructor(props) {
@@ -18,112 +20,186 @@ export class FindPage extends React.Component {
 	}
 
 	initializePage = () => {
-		if(!this.props.auth.uid || this.props.moviesList.length === 0 || Object.keys(this.props.users).length === 0)
+
+		if(this.props.users.length === 0 || this.props.tempUsers.length === 0 || this.props.moviesList.length === 0)
 		{
 			this.props.startReadMovies().then(() => {
 				this.props.startReadUsers().then(() => {
-			      	this.props.startSetUser(this.props.auth.uid).then(() => {
-						this.findNewMovie();
+			      	this.props.startReadTempUsers().then(() => {
+			      		if(!!this.props.auth.uid)
+			      		{
+				      		this.props.startSetUser(this.props.auth.uid).then(() => {
+				      			if(10 <= Object.keys(this.props.user.recommendedList).length)
+				      			{
+									this.findNewMovie();
+								} else {
+									this.setState(() => ({
+										initialization: true
+									})); 
+								}
+					        });
+			      		} else {
+			      			if(10 <= Object.keys(this.props.tempUser.recommendedList).length)
+			      			{
+								this.findNewMovie();
+							} else {
+								this.setState(() => ({
+									initialization: true
+								})); 
+							}
+			      		}
 			        });
 		        });
 		    });
 		} else {
-			this.findNewMovie();
+			if(!!this.props.auth.uid)
+      		{
+      			if(this.props.user.length === 0)
+      			{
+	      			this.props.startSetUser(this.props.auth.uid).then(() => {
+		      			if(10 <= Object.keys(this.props.user.recommendedList).length)
+		      			{
+							this.findNewMovie();
+						} else {
+							this.setState(() => ({
+								initialization: true
+							})); 
+						}
+			        });
+	      		} else {
+	      			if(10 <= Object.keys(this.props.user.recommendedList).length)
+	      			{
+						this.findNewMovie();
+					} else {
+						this.setState(() => ({
+							initialization: true
+						})); 
+					}
+	      		}
+      		} else {
+      			if(10 <= Object.keys(this.props.tempUser.recommendedList).length)
+      			{
+					this.findNewMovie();
+				} else {
+					this.setState(() => ({
+						initialization: true
+					})); 
+				}
+      		}
 		}
 	}
 
 	findNewMovie = () => {
 		let i = 0;
-		let mainSampleObject = this.props.users;
+		const primarySampleObject = this.props.users;
+		const secondarySampleObject = this.props.tempUsers;
 
+		let mainSampleObject = {...primarySampleObject, ...secondarySampleObject};
+		let currentUser;
 		// delete self from the list
-		delete mainSampleObject[this.props.auth.uid]
+		if(!!this.props.auth.uid)
+		{
+			delete mainSampleObject[this.props.auth.uid]
+			currentUser = this.props.user;
+
+		} else {
+			delete mainSampleObject[this.props.tempUser.uid]
+			currentUser = this.props.tempUser;
+		}
 
 		let storedSample = Object.keys(mainSampleObject);
 		let currentSample = new Array();
 
+		// only storing users that have made recommendations
+		storedSample.forEach((sampleUser) => {
+			if(!!mainSampleObject[sampleUser].recommendedList)
+			{
+				currentSample.push(sampleUser);
+			}
+		})
+		storedSample = currentSample;
+
 		// scans through my movie recommendations, if another user has the same recommendations they are adding to an array of like users
 		do {
-			let movieId = Object.keys(this.props.user.recommendedList)[i]
-			let currentSample = new Array();
+			let movieId = Object.keys(currentUser.recommendedList)[i]
+			currentSample = new Array();
 
 			storedSample.forEach((sampleUser) => {
-				if(!!this.props.users[sampleUser].recommendedList && this.props.users[sampleUser].recommendedList[movieId])
+				if(!!mainSampleObject[sampleUser].recommendedList && mainSampleObject[sampleUser].recommendedList[movieId])
 				{
-					if(this.props.users[sampleUser].recommendedList[movieId].recommended === this.props.user.recommendedList[movieId].recommended)
+					if(mainSampleObject[sampleUser].recommendedList[movieId].recommended === currentUser.recommendedList[movieId].recommended)
 					{
 						currentSample.push(sampleUser);
 					}
-				} else {
-					currentSample.push(sampleUser);
 				}
 			})
-
-			if(currentSample.length > 6 && currentSample.length < 30)
+			
+			if(currentSample.length > 5)
 			{
 				storedSample = currentSample;
 			}
-			i = i + 1
-		} while (i < Object.keys(this.props.user.recommendedList).length || currentSample.length > 6)
 
-		let mainSample;
-		let randomNumber
-		// select one random like user
-		for (i = 0; i < storedSample.length; i++)
-		{
-			randomNumber = Math.floor(Math.random() * Math.floor(storedSample.length));
-			mainSample = storedSample[randomNumber];
-			if(!!this.props.users[mainSample].recommendedList) {break; }
-		}
-		// compares sample user's recommendations to all other users 
+			i = i + 1
+		} while (i < Object.keys(currentUser.recommendedList).length || currentSample.length > 5)
+
+
+		// creates a unique list of movies for score evaluation
+		let unseenRecommendedMoviesList = new Array();
+		storedSample.forEach((sampleUser) => {
+			Object.keys(mainSampleObject[sampleUser].recommendedList).forEach((movieId) => {
+
+				if((!currentUser.seenList[movieId] || (currentUser.seenList[movieId] && !currentUser.seenList[movieId].seen)) && unseenRecommendedMoviesList.indexOf(movieId) === -1)
+				{
+					unseenRecommendedMoviesList.push(movieId);
+				}
+			})
+		})
+
+
+		// 
 		let recommendListSamples = new Array();
-		i = 0;
-		do {
-			let movieId = Object.keys(this.props.users[mainSample].recommendedList)[i];
+
+		for(i = 0; i < unseenRecommendedMoviesList.length; i++)
+		{
+			let movieId = unseenRecommendedMoviesList[i];
 			let movieRecommendRating = 0;
 			let numberOfRecommendations = 0;
 			let recommendationScore = 0;
 
-			if(!this.props.user.recommendedList[movieId])
-			{
-				if(!this.props.user.seenList[movieId] || (this.props.user.seenList[movieId] && !this.props.user.seenList[movieId].seen))
+			storedSample.forEach((sampleUser) => {
+				if(!!mainSampleObject[sampleUser].recommendedList[movieId])
 				{
-					storedSample.forEach((sampleUser) => {
-						if(!!this.props.users[sampleUser].recommendedList && !!this.props.users[sampleUser].recommendedList[movieId])
-						{
-							if(this.props.users[sampleUser].recommendedList[movieId].recommended)
-							{
-								movieRecommendRating++;
-							} else {
-								movieRecommendRating--;
-							}
-						}
-						numberOfRecommendations++;
-					})
-
-					recommendationScore = (50 + movieRecommendRating * 50 / numberOfRecommendations);
-					recommendListSamples.push({score: recommendationScore, movie: movieId});
+					if(mainSampleObject[sampleUser].recommendedList[movieId].recommended)
+					{
+						movieRecommendRating++;
+					} else {
+						movieRecommendRating--;
+					}
 				}
-			}
+				numberOfRecommendations++;
+			})
 
-			i = i + 1
-		} while (i < Object.keys(this.props.users[mainSample].recommendedList).length)
+			recommendationScore = (50 + movieRecommendRating * 50 / numberOfRecommendations);
+			recommendListSamples.push({score: recommendationScore, movie: movieId});
+		}
+
 
 		let recommendedMovieList = new Object();
 		this.filter(recommendListSamples).forEach((movieItem) => {
 			const id = movieItem.movie;
 			recommendedMovieList[id] = {
-				title: this.props.moviesList[id].title,
-				genre: this.props.moviesList[id].genre,
-				poster: this.props.moviesList[id].poster,
-				rated: this.props.moviesList[id].rated,
-				released: this.props.moviesList[id].released,
-				rating: this.props.moviesList[id].rating,
+				title: this.props.moviesList.list[id].title,
+				genre: this.props.moviesList.list[id].genre,
+				poster: this.props.moviesList.list[id].poster,
+				rated: this.props.moviesList.list[id].rated,
+				released: this.props.moviesList.list[id].released,
+				rating: this.props.moviesList.list[id].rating,
 				score: movieItem.score
 			}
 		})
 		this.setState(() => ({
 			recommendedMovieList,
+			minimumMovies: true,
 			initialization: true
 		})); 
 	}
@@ -147,31 +223,49 @@ export class FindPage extends React.Component {
 				</div>
 			    {
 			    	this.state.initialization ? 
-			    	<div className="box-layout-list">
+			    	<div className="find-view-container">
 			    	{
-			    		Object.keys(this.state.recommendedMovieList).map((movie) => (
-				    			<div className="box-layout-separators">
-								    <div className="box-movie-card-layout">
-							    		<div className="box-layout__poster find-page">
-								    		<img 
-										      src={this.state.recommendedMovieList[movie].poster}
-										      alt="new"
-										    />
-									    </div>
-									    <div className="box-loyout__bottom">
-									    	<div className="box-loyout__bottom-info">
-								    			<p className="box-layout__subtitle">{this.state.recommendedMovieList[movie].title}</p>
-								    			<p className="box-layout__subtitle">Recommendation score: {Math.round(this.state.recommendedMovieList[movie].score * 100) / 100}</p>
-								    			<p className="box-layout__subtitle">IMDb rating: {this.state.recommendedMovieList[movie].rating}</p>
-											    <p className="box-layout__subtitle">Released: {this.state.recommendedMovieList[movie].released}</p>
-											    <p className="box-layout__subtitle">Genre: {this.state.recommendedMovieList[movie].genre}</p>
+			    		!!this.state.minimumMovies ?
+				    	<div className="box-layout-list">
+				    	{
+				    		Object.keys(this.state.recommendedMovieList).map((movie) => (
+					    			<div className="box-layout-separators">
+									    <div className="box-movie-card-layout">
+								    		<div className="box-layout__poster find-page">
+									    		<img 
+											      src={this.state.recommendedMovieList[movie].poster}
+											      alt="new"
+											    />
 										    </div>
-										</div>
+										    <div className="box-loyout__bottom">
+										    	<div className="box-loyout__bottom-info">
+									    			<p className="box-layout__subtitle">{this.state.recommendedMovieList[movie].title}</p>
+									    			<p className="box-layout__subtitle">Recommendation score: {Math.round(this.state.recommendedMovieList[movie].score * 100) / 100}</p>
+									    			<p className="box-layout__subtitle">IMDb rating: {this.state.recommendedMovieList[movie].rating}</p>
+												    <p className="box-layout__subtitle">Released: {this.state.recommendedMovieList[movie].released}</p>
+												    <p className="box-layout__subtitle">Genre: {this.state.recommendedMovieList[movie].genre}</p>
+											    </div>
+											</div>
+									    </div>
 								    </div>
-							    </div>
-							)
-			    		)
-					}
+								)
+				    		)
+						}
+				    	</div> :
+				    	<div className="error-box-layout">
+			                <div className="error-message">
+								<h1 className="error-title">Need more movies</h1>
+								<p className="error-body">You need to recommend at least 10 movies so we can find others you might like.</p>
+								<button className="button" onClick={() => {
+								    history.push({
+								    	pathname: "/recommend",
+								    	state: { previousPath: history.location}
+								    });
+								}}>Recommend more movies
+								</button>
+			                </div>
+			             </div>
+			    	}
 			    	</div>
 			    	: <LoadingPage />
 			    }
@@ -183,12 +277,15 @@ export class FindPage extends React.Component {
 const mapDispatchToProps = (dispatch) => ({
 	startSetUser: (id) => dispatch(startSetUser(id)),
 	startReadMovies: () => dispatch(startReadMovies()),
-	startReadUsers: () => dispatch(startReadUsers())
+	startReadUsers: () => dispatch(startReadUsers()),
+	startReadTempUsers: () => dispatch(startReadTempUsers())
 });
 
 const mapStateToProps = (state) => ({
 	user: state.user,
 	users: state.users,
+	tempUsers: state.tempUsers,
+	tempUser: state.tempUser,
 	auth: state.auth,
 	moviesList: state.movies
 })

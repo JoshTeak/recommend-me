@@ -3,7 +3,9 @@ import thunk from 'redux-thunk';
 import authReducer from '../reducers/auth';
 import userReducer from '../reducers/user';
 import usersReducer from '../reducers/users';
-import moviesList from '../reducers/moviesList';
+import tempUsersReducer from '../reducers/tempUsers';
+import tempUserReducer from '../reducers/tempUser';
+import moviesListReducer from '../reducers/moviesList';
 
 const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
 
@@ -13,7 +15,9 @@ export default () => {
       auth: authReducer,
       user: userReducer,
       users: usersReducer,
-      movies: moviesList
+      movies: moviesListReducer,
+      tempUser: tempUserReducer,
+      tempUsers: tempUsersReducer
     }),
     composeEnhancers(applyMiddleware(thunk))
   );

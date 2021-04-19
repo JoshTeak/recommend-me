@@ -1,6 +1,6 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { startLogout } from '../actions/auth';
+import { startLogout, startLogin } from '../actions/auth';
 import { resetUser } from '../actions/user';
 import { history } from '../routers/AppRouter'; //todo consider importing from a different file.
 import { firebase, googleAuthProvider } from '../firebase/firebase';
@@ -41,12 +41,21 @@ export class MenuPage extends React.Component {
 				</div>
 	    		<div className="options-body">
                     <div className="options-list">
-						<div className="option selectable"  onClick={this.props.startLogout}>
-							<div className="icon-container">
-								<img className="icon" src="/images/Menu-Expand@4x.png" alt="Menu-Expand@4x" />
+	                    {
+	                    	!!this.props.auth.uid ? 
+	                    	<div className="option selectable"  onClick={this.props.startLogout}>
+								<div className="icon-container">
+									<img className="icon" src="/images/Menu-Expand@4x.png" alt="Menu-Expand@4x" />
+								</div>
+								<h3 className="option-name">Logout</h3>
+							</div> :
+							<div className="option selectable"  onClick={this.props.startLogin}>
+								<div className="icon-container">
+									<img className="icon" src="/images/Menu-Expand@4x.png" alt="Menu-Expand@4x" />
+								</div>
+								<h3 className="option-name">Login</h3>
 							</div>
-							<h3 className="option-name">Logout</h3>
-						</div>
+	                    }
 						<div className="option selectable" onClick={this.resetAlgorithm}>
 							<div className="icon-container">
 								<img className="icon" src="/images/Favourite@4x.png" alt="Favourite@4x" />
@@ -62,6 +71,7 @@ export class MenuPage extends React.Component {
 
 const mapDispatchToProps = (dispatch) => ({
   startLogout: () => dispatch(startLogout()),
+  startLogin: () => dispatch(startLogin()),
   resetUser: (id) => dispatch(resetUser(id))
 });
 

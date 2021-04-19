@@ -7,7 +7,11 @@ export default (state = moviesReducerDefaultState, action) => {
 			return action.list;
 		case 'READ_MOVIES':
 		{
-			return action.list;
+			return {list: action.list, randomList: action.randomList};
+		}
+		case 'SHUFFLE_MOVIES':
+		{
+			return {randomList: action.randomList};
 		}
 		default:
 			return state;

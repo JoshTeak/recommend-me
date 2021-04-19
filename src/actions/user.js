@@ -5,6 +5,7 @@ export const setUser = (user) => ({
 	type: 'SET_USER',
 	user
 });
+
 export const startSetUser = (myId, userData = {}) => {
 	return (dispatch) => {
 		return database.ref(`users/${myId}`).once('value').then((snapshot) => {
