@@ -11,6 +11,12 @@
 	font-size: $font-size-xxlarge;
 	margin: 0;
 	padding: $m-size $l-size;
+	@media (max-width: $desktop-breakpoint-second) {
+	    font-size: $font-size-xlarge;
+	}
+	@media (max-width: $desktop-breakpoint-third) {
+	    font-size: $font-size-large;
+	}
 }
 
 .page-background {

@@ -13,6 +13,22 @@ export class AdminPage extends React.Component {
 		};
 	};
 
+	uniqueMovies = () => {
+		const movieArray = movieList();
+		const uniqueArray = movieArray.filter((value, index, self) => {
+			return self.indexOf(value) === index;
+		})
+		let i;
+		let string = '';
+		let string2 = '';
+		for(i = 0; i < uniqueArray.length; i++)
+		{
+			string2 = `\"${uniqueArray[i]}\",\n`;
+			string = string.concat(string2);
+		}
+		console.log(string);
+	}
+
 	findNewMovie = () => {
 		let movieName;
 		let i = 0;		
@@ -86,6 +102,7 @@ export class AdminPage extends React.Component {
 	render() {
 		return (
 			<div>
+				<button onClick={this.uniqueMovies}>Print unique movies</button>
 				<button onClick={this.findNewMovie}>send requests</button>
 			    <button onClick={this.submit}>upload to database</button>
 			</div>

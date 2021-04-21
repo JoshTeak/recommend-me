@@ -8,7 +8,7 @@ export const PublicRoute = ({
   ...rest
 }) => (
     <Route {...rest} component={(props) => (
-      <Redirect to="/seen" />
+      <Redirect to="/landing" />
     )} />
   );
 

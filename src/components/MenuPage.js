@@ -26,6 +26,13 @@ export class MenuPage extends React.Component {
 		});
 	}
 
+	goToLandingPage = () => {
+		history.push({
+			pathname: "/landing",
+			state: { previousPath: history.location}
+		});
+	}
+
 	render() {
 		return (
 			<div className="page-background">
@@ -61,6 +68,12 @@ export class MenuPage extends React.Component {
 								<img className="icon" src="/images/Favourite@4x.png" alt="Favourite@4x" />
 							</div>
 							<h3 className="option-name">Reset</h3>
+						</div>
+						<div className="option selectable" onClick={this.goToLandingPage}>
+							<div className="icon-container">
+								<img className="icon" src="/images/Clipboard.png" alt="Clipboard" />
+							</div>
+							<h3 className="option-name">Info</h3>
 						</div>
                     </div>
                 </div>

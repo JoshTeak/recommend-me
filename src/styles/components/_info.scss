@@ -1,0 +1,32 @@
+.info-segment {
+  margin: $m-size 0;
+  width: min-content;
+  background-color: #00000012;
+  z-index: 1;
+  padding: $m-l-size;
+  border-radius: 0.4rem;
+}
+
+.info-segment p {
+  color: #ffffffa8;
+  width: 50vw;
+  min-width: 27rem;
+  border-radius: $s-corner;
+  font-size: $font-size-large;
+  margin: 0 0 $m-l-size 0;
+}
+
+.info-heading {
+  color: white;
+  margin: 0 0 $m-l-size 0;
+  font-size: $font-size-xlarge;
+}
+
+.info-segment button {
+  font-size: $font-size-xlarge;
+  font-weight: bold;
+  padding: $m-l-size;
+  background-color: #c7323285;
+  color: #ffffff9e;
+  border-radius: $m-corner;
+}

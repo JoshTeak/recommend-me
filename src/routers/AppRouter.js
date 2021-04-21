@@ -5,6 +5,8 @@ import SeenPage from '../components/SeenPage';
 import RecommendPage from '../components/RecommendPage';
 import FindPage from '../components/FindPage'; 
 import MenuPage from '../components/MenuPage';
+import LandingPage from '../components/LandingPage'; 
+import AdminPage from '../components/ApiToDatabase';
 import NotFoundPage from '../components/NotFoundPage';
 import LoginPage from '../components/LoginPage';
 import PrivateRoute from './PrivateRoute';
@@ -51,10 +53,12 @@ export const Page = () => {
             }}
           >
             <Switch location={location}>
+              <PrivateRoute path="/landing" component={LandingPage} exact={true}/>
               <PrivateRoute path="/seen" component={SeenPage} />
               <PrivateRoute path="/recommend" component={RecommendPage} />
               <PrivateRoute path="/find" component={FindPage} />
               <PrivateRoute path="/menu" component={MenuPage} />
+              <PrivateRoute path="/admin" component={AdminPage} />
               <Route component={NotFoundPage} />
             </Switch>
           </CSSTransition>
@@ -77,14 +81,16 @@ export const Direction = (dir) => {
 export const LocationValue = (path) => {
   let pathValue;
   switch (path) {
-    case '/seen':
+    case '/landing':
       return 0;
-    case '/recommend':
+    case '/seen':
       return 1;
-    case '/find':
+    case '/recommend':
       return 2;
-    case './menu':
+    case '/find':
       return 3;
+    case './menu':
+      return 4;
     default:
       return 10;
   }
