@@ -157,7 +157,7 @@ export class RecommendPage extends React.Component {
 			<div className="page-background">
 				<div className="header-row">
 					<div className="page-title">
-						<h1>Recommend</h1>
+						<h1>Like it?</h1>
 					</div>
 					<Options className="options-tab" />
 				</div>

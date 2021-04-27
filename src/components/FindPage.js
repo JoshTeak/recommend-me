@@ -217,7 +217,7 @@ export class FindPage extends React.Component {
 			<div className="page-background">
 				<div className="header-row">
 					<div className="page-title">
-						<h1>My List</h1>
+						<h1>Picks for you</h1>
 					</div>
 					<Options className="options-tab" />
 				</div>

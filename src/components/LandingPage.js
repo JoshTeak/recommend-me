@@ -29,9 +29,9 @@ export class LandingPage extends React.Component {
               </div>
               <div className="info-segment">
                 <h2 className="info-heading">Instructions</h2>
-                <p className="info-write-up">Step one, the Seen page. If you have seen the movie swipe left and if you haven't, swipe right. It’s that simple. Once you’ve seen a few movies, move on to the next step.</p>
-                <p className="info-write-up">Step two, the Recommend page. The recommend page shows movies that you’ve seen. Swipe left if you would recommend, and right if you wouldn’t.</p>
-                <p className="info-write-up">Step three. After you have recommended at least 10 movies you can view the My List page which will find you movie recommendations based on your taste in movies.</p>
+                <p className="info-write-up">Step one, the 'Seen it' page. If you have seen the movie swipe left and if you haven't, swipe right. It’s that simple. Once you’ve seen a few movies, move on to the next step.</p>
+                <p className="info-write-up">Step two, the 'Like it' page. this page shows movies that you’ve seen. Swipe left if you like the movie, and right if you don't.</p>
+                <p className="info-write-up">Step three. After you have liked at least 10 movies you can view the 'Picks for you' page which will find you movie recommendations based on your taste in movies.</p>
                 <p className="info-write-up">That’s everything. Please enjoy!</p>
                 <p className="info-write-up">Also don’t forget to login if you want us to remember your recommendations for future use!</p>
                 <button className="button" onClick={this.props.startLogin}>Login with Google</button>

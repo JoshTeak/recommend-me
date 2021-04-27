@@ -150,7 +150,7 @@ export class SeenPage extends React.Component {
 			<div className="page-background">
 				<div className="header-row">
 					<div className="page-title">
-						<h1>Seen</h1>
+						<h1>Seen it?</h1>
 					</div>
 					<Options className="options-tab" />
 				</div>
